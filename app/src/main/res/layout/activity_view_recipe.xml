@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:id="@+id/view_recipe_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+    <FrameLayout android:id="@+id/video_container"
+      android:layout_width="match_parent"
+      android:layout_height="180dp"
+      android:scaleType="centerInside"/>
+
+    <FrameLayout android:id="@+id/step_instructions_container"
+      android:layout_width="match_parent"
+      android:layout_height="180dp"
+      android:scaleType="centerInside"/>
+
+
+  </LinearLayout>
+
+</ScrollView>

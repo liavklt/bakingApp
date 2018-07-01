@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:baselineAligned="false"
+  android:orientation="horizontal"
+  tools:context="com.example.android.bakingapp.MasterListActivity">
+
+  <!--
+  This layout is a two-pane layout for the master/detail flow.
+  -->
+
+  <!-- The static MasterListFragment -->
+  <fragment
+    android:id="@+id/master_list_fragment"
+    android:name="com.example.android.bakingapp.MasterListFragment"
+    android:layout_width="400dp"
+    android:layout_height="match_parent" />
+
+  <!-- A small divider -->
+  <View
+    android:layout_width="1dp"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray" />
+
+  <LinearLayout
+    android:id="@+id/view_recipe_linear_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
+
+
+    <FrameLayout
+      android:id="@+id/step_instructions_container"
+      android:layout_width="match_parent"
+      android:layout_height="180dp"
+      android:scaleType="centerInside"/>
+
+  </LinearLayout>
+
+</LinearLayout>
