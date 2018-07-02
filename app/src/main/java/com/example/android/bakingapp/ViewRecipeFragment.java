@@ -7,25 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import com.example.android.bakingapp.model.Step;
 
 /**
  * Created by lianavklt on 26/06/2018.
  */
 
 public class ViewRecipeFragment extends Fragment {
-
-  private String videoUrl;
-
-  public String getVideoUrl() {
-    return videoUrl;
-  }
-
-  public void setVideoUrl(String videoUrl) {
-    this.videoUrl = videoUrl;
-  }
 
   ViewRecipeActivity a;
 

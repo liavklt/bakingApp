@@ -75,9 +75,10 @@ public class MasterListActivity extends AppCompatActivity implements
         Step step = ((Recipe) intent.getParcelableExtra("recipe")).getSteps().get(0);
         viewRecipeFragment.setDescription(
             step.getDescription());
-        ViewRecipeFragment videoFragment = new ViewRecipeFragment();
+        VideoFragment videoFragment = new VideoFragment();
         videoFragment.setVideoUrl(step.getVideoUrl());
 
+        fragmentManager.beginTransaction().add(R.id.video_container,videoFragment).commit();
         fragmentManager.beginTransaction().add(R.id.step_instructions_container, viewRecipeFragment)
             .commit();
 

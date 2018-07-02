@@ -28,7 +28,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
       ViewRecipeFragment stepFragment = new ViewRecipeFragment();
       Step step = getIntent().getParcelableExtra("step");
       stepFragment.setDescription(step.getDescription());
-      ViewRecipeFragment videoFragment = new ViewRecipeFragment();
+      VideoFragment videoFragment = new VideoFragment();
       videoFragment.setVideoUrl(step.getVideoUrl());
 
       fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
