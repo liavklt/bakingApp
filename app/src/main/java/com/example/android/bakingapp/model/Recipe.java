@@ -14,6 +14,7 @@ public class Recipe implements Parcelable {
   private String name;
   private int id;
   private List<Step> steps;
+  private List<Ingredient> ingredients;
 
   public List<Step> getSteps() {
     return steps;
