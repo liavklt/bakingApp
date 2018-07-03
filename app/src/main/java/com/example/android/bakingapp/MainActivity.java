@@ -39,12 +39,14 @@ public class MainActivity extends AppCompatActivity {
       InputStream inputStream = this.getResources().openRawResource(R.raw.recipes);
       String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
       recipes = JsonUtils.getStringsFromJson(jsonString);
+      //TODO save ingredients here?
     } catch (JSONException e) {
       e.printStackTrace();
     }
     RecipeListAdapter mAdapter = new RecipeListAdapter(this, recipes);
 
     // Set the adapter on the GridView
+    //TODO change to RecyclerView
     gridView.setAdapter(mAdapter);
     gridView.setNumColumns(1);
 
