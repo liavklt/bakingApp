@@ -11,29 +11,6 @@ import java.util.List;
 
 public class Recipe implements Parcelable {
 
-  private String name;
-  private int id;
-  private List<Step> steps;
-  private List<Ingredient> ingredients;
-
-  public List<Step> getSteps() {
-    return steps;
-  }
-
-  public void setSteps(List<Step> steps) {
-    this.steps = steps;
-  }
-
-  public Recipe() {
-  }
-
-  public Recipe(Parcel source) {
-    name = source.readString();
-    id = source.readInt();
-    steps = new ArrayList<>();
-    source.readTypedList(steps,Step.CREATOR);
-
-  }
   public static final Parcelable.Creator<Recipe> CREATOR =
       new Parcelable.Creator<Recipe>() {
         @Override
@@ -46,6 +23,38 @@ public class Recipe implements Parcelable {
           return new Recipe[size];
         }
       };
+  private String name;
+  private int id;
+  private List<Step> steps;
+  private List<Ingredient> ingredients;
+
+  public Recipe() {
+  }
+
+  public Recipe(Parcel source) {
+    name = source.readString();
+    id = source.readInt();
+    steps = new ArrayList<>();
+    source.readTypedList(steps,Step.CREATOR);
+
+  }
+
+  public List<Ingredient> getIngredients() {
+    return ingredients;
+  }
+
+  public void setIngredients(List<Ingredient> ingredients) {
+    this.ingredients = ingredients;
+  }
+
+  public List<Step> getSteps() {
+    return steps;
+  }
+
+  public void setSteps(List<Step> steps) {
+    this.steps = steps;
+  }
+
   public String getName() {
     return name;
   }

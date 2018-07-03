@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
-import com.example.android.bakingapp.model.Ingredient;
 
 /**
  * Created by lianavklt on 03/07/2018.
@@ -23,7 +22,7 @@ public class IngredientsDbHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     final String SQL_CREATE_INGREDIENTS_TABLE =
         "CREATE TABLE " + IngredientsEntry.TABLE_NAME + " (" +
-            IngredientsEntry.COLUMN_ID + " INTEGER PRIMARY KEY NOT NULL, " +
+            IngredientsEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             IngredientsEntry.COLUMN_RECIPE_ID + " INTEGER NOT NULL, " +
             IngredientsEntry.COLUMN_RECIPE_NAME + " TEXT NOT NULL, " +
             IngredientsEntry.COLUMN_QUANTITY + " INTEGER, " +

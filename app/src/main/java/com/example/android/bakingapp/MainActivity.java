@@ -1,14 +1,19 @@
 package com.example.android.bakingapp;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
+import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
       InputStream inputStream = this.getResources().openRawResource(R.raw.recipes);
       String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
       recipes = JsonUtils.getStringsFromJson(jsonString);
-      //TODO save ingredients here?
+      for (Recipe recipe : recipes) {
+        addIngredients(recipe);
+      }
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -56,6 +63,27 @@ public class MainActivity extends AppCompatActivity {
         launchMasterListActivity(i);
       }
     });
+
+  }
+
+  private void addIngredients(Recipe recipe) {
+    List<Ingredient> ingredients = recipe.getIngredients();
+    for (Ingredient ingredient : ingredients) {
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(IngredientsEntry.COLUMN_RECIPE_NAME, recipe.getName());
+      contentValues.put(IngredientsEntry.COLUMN_RECIPE_ID, recipe.getId());
+      contentValues.put(IngredientsEntry.COLUMN_INGREDIENT, ingredient.getIngredientDescription());
+      contentValues.put(IngredientsEntry.COLUMN_MEASURE, ingredient.getMeasure());
+      contentValues.put(IngredientsEntry.COLUMN_QUANTITY, ingredient.getQuantity());
+      Uri uri = getContentResolver().insert(IngredientsEntry.CONTENT_URI, contentValues);
+      if (uri != null) {
+        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+      } else {
+        Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
+      }
+
+    }
+
 
   }
 
