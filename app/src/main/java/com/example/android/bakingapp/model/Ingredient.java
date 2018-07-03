@@ -6,18 +6,23 @@ package com.example.android.bakingapp.model;
 
 public class Ingredient {
 
-  private int quantity;
+  private double quantity;
   private String measure;
   private String ingredientDescription;
 
   public Ingredient() {
   }
 
-  public int getQuantity() {
+  @Override
+  public String toString() {
+    return quantity + " " + measure + " of " + ingredientDescription;
+  }
+
+  public double getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(int quantity) {
+  public void setQuantity(double quantity) {
     this.quantity = quantity;
   }
 

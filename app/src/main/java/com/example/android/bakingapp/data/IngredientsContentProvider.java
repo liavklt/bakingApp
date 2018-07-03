@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.data;
 
+import static com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry.COLUMN_RECIPE_ID;
 import static com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry.TABLE_NAME;
 
 import android.content.ContentProvider;
@@ -80,6 +81,13 @@ public class IngredientsContentProvider extends ContentProvider {
     final SQLiteDatabase db = ingredientsDbHelper.getWritableDatabase();
     int match = uriMatcher.match(uri);
     Uri returnUri;
+    String recipeId = values != null ? values.get(COLUMN_RECIPE_ID).toString() : null;
+    Cursor queryCursor = db
+        .query(TABLE_NAME, null, COLUMN_RECIPE_ID + "=?", new String[]{recipeId}, null, null, null);
+    if (queryCursor.getCount() != 0) {
+      queryCursor.close();
+      return null;
+    }
     switch (match) {
       case INGREDIENTS:
         long id = db.insert(TABLE_NAME, null, values);

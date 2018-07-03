@@ -1,5 +1,6 @@
 package utils;
 
+import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 import java.util.ArrayList;
@@ -18,9 +19,13 @@ public class JsonUtils {
   private static final String ID = "id";
   private static final String NAME = "name";
   private static final String STEPS = "steps";
+  private static final String INGREDIENTS = "ingredients";
   private static final String SHORT_DESCRIPTION = "shortDescription";
   private static final String DESCRIPTION = "description";
   private static final String VIDEO_URL = "videoURL";
+  private static final String QUANTITY = "quantity";
+  private static final String MEASURE = "measure";
+  private static final String INGREDIENT_DESCRIPTION = "ingredient";
 
   public static List<Recipe> getStringsFromJson(String jsonString) throws JSONException {
     List<Recipe> recipes = new ArrayList<>();
@@ -34,9 +39,28 @@ public class JsonUtils {
       recipe.setId(recipeId);
       recipe.setName(recipeName);
       recipe.setSteps(populateRecipeStepsFromJson(recipeInfo));
+      recipe.setIngredients(populateIngredientsFromJson(recipeInfo));
       recipes.add(recipe);
     }
     return recipes;
+  }
+
+  private static List<Ingredient> populateIngredientsFromJson(JSONObject recipeInfo)
+      throws JSONException {
+    List<Ingredient> ingredientList = new ArrayList<>();
+    JSONArray ingredients = recipeInfo.getJSONArray(INGREDIENTS);
+    for (int i = 0; i < ingredients.length(); i++) {
+      JSONObject ingredientInfo = ingredients.getJSONObject(i);
+      Ingredient ingredient = new Ingredient();
+      double quantity = ingredientInfo.getDouble(QUANTITY);
+      String measure = ingredientInfo.getString(MEASURE);
+      String description = ingredientInfo.getString(INGREDIENT_DESCRIPTION);
+      ingredient.setIngredientDescription(description);
+      ingredient.setMeasure(measure);
+      ingredient.setQuantity(quantity);
+      ingredientList.add(ingredient);
+    }
+    return ingredientList;
   }
 
   private static List<Step> populateRecipeStepsFromJson(JSONObject recipeInfo)

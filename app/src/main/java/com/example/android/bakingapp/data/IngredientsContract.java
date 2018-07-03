@@ -21,8 +21,6 @@ public class IngredientsContract {
     public static final String COLUMN_ID="id";
     public static final String COLUMN_RECIPE_ID="recipeId";
     public static final String COLUMN_RECIPE_NAME="recipeName";
-    public static final String COLUMN_QUANTITY="quantity";
-    public static final String COLUMN_MEASURE="measure";
     public static final String COLUMN_INGREDIENT="ingredient";
   }
 }

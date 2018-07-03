@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -68,20 +69,20 @@ public class MainActivity extends AppCompatActivity {
 
   private void addIngredients(Recipe recipe) {
     List<Ingredient> ingredients = recipe.getIngredients();
+    List<String> ingredientDescriptions = new ArrayList<>();
     for (Ingredient ingredient : ingredients) {
-      ContentValues contentValues = new ContentValues();
-      contentValues.put(IngredientsEntry.COLUMN_RECIPE_NAME, recipe.getName());
-      contentValues.put(IngredientsEntry.COLUMN_RECIPE_ID, recipe.getId());
-      contentValues.put(IngredientsEntry.COLUMN_INGREDIENT, ingredient.getIngredientDescription());
-      contentValues.put(IngredientsEntry.COLUMN_MEASURE, ingredient.getMeasure());
-      contentValues.put(IngredientsEntry.COLUMN_QUANTITY, ingredient.getQuantity());
-      Uri uri = getContentResolver().insert(IngredientsEntry.CONTENT_URI, contentValues);
-      if (uri != null) {
-        Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
-      } else {
-        Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
-      }
-
+      ingredientDescriptions.add(ingredient.toString());
+    }
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(IngredientsEntry.COLUMN_RECIPE_NAME, recipe.getName());
+    contentValues.put(IngredientsEntry.COLUMN_RECIPE_ID, recipe.getId());
+    contentValues
+        .put(IngredientsEntry.COLUMN_INGREDIENT, TextUtils.join(",", ingredientDescriptions));
+    Uri uri = getContentResolver().insert(IngredientsEntry.CONTENT_URI, contentValues);
+    if (uri != null) {
+      Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+    } else {
+      Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
     }
 
 
