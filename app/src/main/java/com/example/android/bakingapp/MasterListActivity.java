@@ -2,7 +2,6 @@ package com.example.android.bakingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.GridView;
@@ -20,6 +19,7 @@ public class MasterListActivity extends AppCompatActivity implements
   private boolean mTwoPane;
   private Recipe recipe;
   private int stepPosition;
+  private Step step;
   public static final String EXTRA_POSITION = "extra_position";
 
 
@@ -72,13 +72,14 @@ public class MasterListActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
-        Step step = ((Recipe) intent.getParcelableExtra("recipe")).getSteps().get(0);
+        step = ((Recipe) intent.getParcelableExtra("recipe")).getSteps().get(0);
         viewRecipeFragment.setDescription(
             step.getDescription());
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setVideoUrl(step.getVideoUrl());
 
-        fragmentManager.beginTransaction().add(R.id.video_container,videoFragment).commit();
+          fragmentManager.beginTransaction().add(R.id.video_container,videoFragment).commit();
+
         fragmentManager.beginTransaction().add(R.id.step_instructions_container, viewRecipeFragment)
             .commit();
 
@@ -98,6 +99,15 @@ public class MasterListActivity extends AppCompatActivity implements
 
     stepPosition = position;
     if (mTwoPane) {
+      step = recipe.getSteps().get(position);
+      ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
+      viewRecipeFragment.setDescription(step.getDescription());
+
+      VideoFragment videoFragment = new VideoFragment();
+      videoFragment.setVideoUrl(step.getVideoUrl());
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.video_container,videoFragment).commit();
+      getSupportFragmentManager().beginTransaction().replace(R.id.step_instructions_container,viewRecipeFragment).commit();
 
     } else {
 
