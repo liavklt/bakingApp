@@ -17,14 +17,51 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <TextView
+  <ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_recipe_ingredients"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"/>
+    android:layout_gravity="center"
+    android:src="@drawable/brownie"/>
+  <TextView
+    android:id="@+id/widget_recipe_name"
+    android:textStyle="bold"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAlignment="center"
+    android:textSize="20sp"
+    tools:text="123"/>
+  <TextView
+    android:id="@+id/widget_ingredients"
+    android:textStyle="bold"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:textAlignment="center"
+    android:textSize="20sp"
+    tools:text="Ingredients"/>
+  <!--<StackView-->
+  <!--android:id="@+id/stack_view"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:gravity="center"-->
+  <!--android:loopViews="true"-->
+  <!--/>-->
+  <!--<TextView-->
+  <!--android:id="@+id/empty_view"-->
+  <!--android:textStyle="bold"-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:gravity="center"-->
+  <!--android:text="This is the empty view"-->
+  <!--android:textSize="20sp"/>-->
+
 
 </LinearLayout>

@@ -4,12 +4,12 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,8 +29,9 @@ import utils.JsonUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-  @BindView(R.id.recipes_grid_view)
-  GridView gridView;
+  @BindView(R.id.lv_recipes)
+  ListView listView;
+
   private List<Recipe> recipes;
 
 
@@ -46,28 +47,24 @@ public class MainActivity extends AppCompatActivity {
       String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
       recipes = JsonUtils.getStringsFromJson(jsonString);
       for (Recipe recipe : recipes) {
-        addIngredients(recipe);
+        addIngredientsIntoDb(recipe);
       }
     } catch (JSONException e) {
       e.printStackTrace();
     }
-    RecipeListAdapter mAdapter = new RecipeListAdapter(this, recipes);
-
-    // Set the adapter on the GridView
-    //TODO change to RecyclerView
-    gridView.setAdapter(mAdapter);
-    gridView.setNumColumns(1);
-
-    gridView.setOnItemClickListener(new OnItemClickListener() {
+    RecipeListAdapter adapter = new RecipeListAdapter(this, recipes);
+    listView.setAdapter(adapter);
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        launchMasterListActivity(i);
+      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        launchMasterListActivity(position);
       }
     });
 
   }
 
-  private void addIngredients(Recipe recipe) {
+  private void addIngredientsIntoDb(Recipe recipe) {
+    //TODO everytime try to add the ingredients? check it out...
     List<Ingredient> ingredients = recipe.getIngredients();
     List<String> ingredientDescriptions = new ArrayList<>();
     for (Ingredient ingredient : ingredients) {
@@ -92,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, MasterListActivity.class);
     intent.putExtra(MasterListActivity.EXTRA_POSITION, i);
     intent.putExtra("recipe", recipes.get(i));
+    intent.putParcelableArrayListExtra("allRecipes", (ArrayList<? extends Parcelable>) recipes);
     startActivity(intent);
   }
 

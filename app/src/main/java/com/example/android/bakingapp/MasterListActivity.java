@@ -10,21 +10,22 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
+import java.util.List;
 
 // This activity is responsible for displaying the master list of all recipes
 // Implement the MasterListFragment callback, OnTextClickListener
 public class MasterListActivity extends AppCompatActivity implements
     MasterListFragment.OnTextClickListener {
 
+  public static final String EXTRA_POSITION = "extra_position";
+  public static final String EXTRA_RECIPE_ID = "com.example.android.bakingapp.extra.RECIPE_ID";
+  List<Recipe> allRecipes;
+  @BindView(R.id.images_grid_view)
+  GridView gridView;
   private boolean mTwoPane;
   private Recipe recipe;
   private int stepPosition;
   private Step step;
-  public static final String EXTRA_POSITION = "extra_position";
-
-
-  @BindView(R.id.images_grid_view)
-  GridView gridView;
 
 //  @Override
 //  protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -41,6 +42,13 @@ public class MasterListActivity extends AppCompatActivity implements
     setContentView(R.layout.activity_select_recipe);
     this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     Bundle extras = getIntent().getExtras();
+    if (extras.getParcelableArray("allRecipes") != null) {
+      allRecipes = extras.getParcelableArrayList("allRecipes");
+      if (extras.getInt(EXTRA_RECIPE_ID) != 0) {
+        recipe = allRecipes.get(extras.getInt(EXTRA_RECIPE_ID));
+      }
+    }
+
     boolean fromNewActivity =Boolean.parseBoolean( extras.getString("fromNewActivity"));
     if(fromNewActivity){
       recipe = extras.getParcelable("recipe");
