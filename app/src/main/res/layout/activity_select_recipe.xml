@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<fragment
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/master_list_fragment"
-  android:name="com.example.android.bakingapp.MasterListFragment"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"/>
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:id="@+id/select_recipe_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:id="@+id/ingredients_container"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="180dp"-->
+    <!--android:scaleType="centerInside"/>-->
+    <fragment
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/fragment_master_list"
+      android:layout_width="match_parent"
+      android:layout_height="180dp"
+      android:name="com.example.android.bakingapp.MasterListFragment"
+      android:scaleType="centerInside"
+      tools:layout="@layout/fragment_master_list"/>
+  </LinearLayout>
+</ScrollView>
+

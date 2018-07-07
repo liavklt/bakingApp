@@ -1,10 +1,13 @@
 package com.example.android.bakingapp;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.android.bakingapp.model.Step;
 import java.util.List;
 
@@ -12,48 +15,61 @@ import java.util.List;
  * Created by lianavklt on 21/06/2018.
  */
 
-public class MasterListAdapter extends BaseAdapter {
+public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.ViewHolder> {
 
   private Context mContext;
   private List<Step> mSteps;
 
 
-  public MasterListAdapter(Context context, List<Step> steps) {
+  public MasterListAdapter(Context context) {
     mContext = context;
-    mSteps = steps;
   }
 
-  /**
-   * Returns the number of items the adapter will display
-   */
+
   @Override
-  public int getCount() {
+  public MasterListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    mContext = parent.getContext();
+    int layoutIdForItem = R.layout.recyclerview_item_recipe;
+    LayoutInflater inflater = LayoutInflater.from(mContext);
+    View thisItemsView = inflater.inflate(layoutIdForItem, parent, false);
+    return new ViewHolder(thisItemsView);
+
+  }
+
+  @Override
+  public void onBindViewHolder(@NonNull MasterListAdapter.ViewHolder holder, int position) {
+    String shortDescription = mSteps.get(position).getShortDescription();
+    holder.textView.setText(shortDescription);
+
+  }
+
+  @Override
+  public int getItemCount() {
+    if (mSteps == null) {
+      return 0;
+    }
     return mSteps.size();
   }
 
-  @Override
-  public Object getItem(int i) {
-    return null;
+  public void setReviewData(List<Step> steps) {
+    this.mSteps = steps;
   }
 
-  @Override
-  public long getItemId(int i) {
-    return 0;
-  }
+  class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-
-  public View getView(final int position, View convertView, ViewGroup parent) {
     TextView textView;
-    if (convertView == null) {
-      textView = new TextView(mContext);
-      textView.setPadding(8, 8, 8, 8);
-    } else {
-      textView = (TextView) convertView;
+
+    public ViewHolder(View itemView) {
+      super(itemView);
+      textView = itemView.findViewById(R.id.tv_recipe_item);
+      textView.setOnClickListener(this);
     }
 
-    textView.setText(mSteps.get(position).getShortDescription());
-    return textView;
 
+    @Override
+    public void onClick(View v) {
+      Toast.makeText(mContext, "Clicked " + v, Toast.LENGTH_SHORT).show();
 
+    }
   }
 }

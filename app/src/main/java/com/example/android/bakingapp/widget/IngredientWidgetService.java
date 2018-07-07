@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.widget;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+import com.example.android.bakingapp.MasterListActivity;
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.IngredientsContract;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 

@@ -3,6 +3,7 @@
   package="com.example.android.bakingapp">
 
   <uses-permission android:name="android.permission.INTERNET"/>
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <!--<uses-permission android:name="android.permission.BIND_REMOTEVIEWS"-->
   <!--tools:ignore="ProtectedPermissions"/>-->
 
@@ -25,7 +26,7 @@
     <activity android:name=".ViewRecipeActivity"
       android:parentActivityName=".MasterListActivity"/>
 
-    <receiver android:name=".IngredientWidgetProvider">
+    <receiver android:name=".widget.IngredientWidgetProvider">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>

@@ -6,9 +6,9 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <GridView
+  <android.support.v7.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/images_grid_view"
+    android:id="@+id/steps_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="7"
@@ -22,7 +22,7 @@
     android:textAlignment="center"
     android:textFilterEnabled="false"
     android:verticalSpacing="8dp">
-  </GridView>
+  </android.support.v7.widget.RecyclerView>
 
 
 
