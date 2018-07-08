@@ -7,19 +7,33 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.devbrackets.android.exomedia.listener.OnPreparedListener;
-import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 /**
  * Created by lianavklt on 02/07/2018.
  */
 
-public class VideoFragment extends Fragment implements OnPreparedListener {
-  private String videoUrl;
+public class VideoFragment extends Fragment {
   ViewRecipeActivity a;
-  VideoView mPlayerView;
+  SimpleExoPlayerView mPlayerView;
+  private String videoUrl;
+  private SimpleExoPlayer mExoPlayer;
 
 
+  public VideoFragment() {
+  }
 
   public String getVideoUrl() {
     return videoUrl;
@@ -27,9 +41,6 @@ public class VideoFragment extends Fragment implements OnPreparedListener {
 
   public void setVideoUrl(String videoUrl) {
     this.videoUrl = videoUrl;
-  }
-
-  public VideoFragment() {
   }
 
   @Override
@@ -46,31 +57,38 @@ public class VideoFragment extends Fragment implements OnPreparedListener {
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
 
-    mPlayerView = rootView.findViewById(R.id.video_view);
-    if (videoUrl!=null && !videoUrl.equals("")) {
-      mPlayerView.setOnPreparedListener(this);
-      mPlayerView.setVideoURI(Uri.parse(videoUrl));
-    }else{
-      mPlayerView.setVisibility(View.GONE);
-    }
+    mPlayerView = rootView.findViewById(R.id.playerView);
+    initializePlayer(Uri.parse(videoUrl));
 
 
     return rootView;
   }
 
+  private void initializePlayer(Uri uri) {
+    if (mExoPlayer == null) {
+      TrackSelector trackSelector = new DefaultTrackSelector();
+      LoadControl loadControl = new DefaultLoadControl();
+      mExoPlayer = ExoPlayerFactory.newSimpleInstance(a, trackSelector);
+      mPlayerView.setPlayer(mExoPlayer);
+      // Prepare the MediaSource.
+      String userAgent = Util.getUserAgent(a, "BakingApp");
+      DataSource.Factory factory = new DefaultDataSourceFactory(a, userAgent,
+          new DefaultBandwidthMeter());
+      MediaSource mediaSource = new ExtractorMediaSource.Factory(factory).createMediaSource(uri);
+      mExoPlayer.prepare(mediaSource);
+      mExoPlayer.setPlayWhenReady(true);
+    }
+  }
 
   @Override
   public void onDestroy() {
     super.onDestroy();
+    releasePlayer();
   }
 
-
-
-  @Override
-  public void onPrepared() {
-
-    if (mPlayerView.getVisibility()!=View.GONE) {
-      mPlayerView.start();
-    }
+  private void releasePlayer() {
+    mExoPlayer.stop();
+    mExoPlayer.release();
+    mExoPlayer = null;
   }
 }
