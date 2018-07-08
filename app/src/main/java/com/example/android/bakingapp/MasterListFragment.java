@@ -43,11 +43,6 @@ public class MasterListFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_master_list, container, false);
   }
 
-//  public interface OnTextClickListener {
-//
-//    void onTextSelected(int position) throws JSONException;
-//  }
-
   public class FetchStepsTaskListener implements AsyncTaskListener<List<Step>> {
 
     @Override
@@ -74,7 +69,6 @@ public class MasterListFragment extends Fragment {
         mAdapter.setReviewData(result);
         mAdapter.notifyDataSetChanged();
       }
-
     }
   }
 

@@ -9,13 +9,26 @@
   <!--
   This layout is a two-pane layout for the master/detail flow.
   -->
-  <!--TODO add ingredient -->
+  <LinearLayout
+    android:layout_width="400dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.RecyclerView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rv_ingredients"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="7"
+      >
+    </android.support.v7.widget.RecyclerView>
   <!-- The static MasterListFragment -->
   <fragment
     android:id="@+id/master_list_fragment"
-    android:layout_width="400dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:name="com.example.android.bakingapp.MasterListFragment"/>
+  </LinearLayout>
 
   <!-- A small divider -->
   <View

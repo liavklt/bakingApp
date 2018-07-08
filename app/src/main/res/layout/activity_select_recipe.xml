@@ -14,11 +14,23 @@
     android:paddingRight="16dp"
     android:background="@android:color/white"
     android:orientation="vertical">
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:id="@+id/ingredients_container"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="180dp"-->
-    <!--android:scaleType="centerInside"/>-->
+    <android.support.v7.widget.RecyclerView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/rv_ingredients"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="7"
+      android:padding="16dp"
+      android:adjustViewBounds="true"
+      android:columnWidth="180dp"
+      android:gravity="center"
+      android:horizontalSpacing="8dp"
+      android:numColumns="1"
+      android:stretchMode="columnWidth"
+      android:textAlignment="center"
+      android:textFilterEnabled="false"
+      android:verticalSpacing="8dp">
+    </android.support.v7.widget.RecyclerView>
     <fragment
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/fragment_master_list"
