@@ -40,7 +40,9 @@ class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapter.Ingre
       int position) {
     int ingredientsIndex = mCursor.getColumnIndex(IngredientsEntry.COLUMN_INGREDIENT);
     mCursor.moveToPosition(position);
-    String ingredients = mCursor.getString(ingredientsIndex);
+    String ingredients = mCursor.getString(ingredientsIndex).replaceAll(",", "\n");
+    ;
+
     holder.ingredientTextView.setText(ingredients);
 
 

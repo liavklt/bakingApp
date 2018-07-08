@@ -19,23 +19,13 @@
       android:id="@+id/rv_ingredients"
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="7"
-      android:padding="16dp"
-      android:adjustViewBounds="true"
-      android:columnWidth="180dp"
-      android:gravity="center"
-      android:horizontalSpacing="8dp"
-      android:numColumns="1"
-      android:stretchMode="columnWidth"
-      android:textAlignment="center"
-      android:textFilterEnabled="false"
-      android:verticalSpacing="8dp">
+      android:layout_weight="7">
     </android.support.v7.widget.RecyclerView>
     <fragment
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/fragment_master_list"
       android:layout_width="match_parent"
-      android:layout_height="180dp"
+      android:layout_height="wrap_content"
       android:name="com.example.android.bakingapp.MasterListFragment"
       android:scaleType="centerInside"
       tools:layout="@layout/fragment_master_list"/>

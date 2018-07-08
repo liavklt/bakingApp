@@ -94,4 +94,26 @@ public class JsonUtils {
     return stepList;
 
   }
+
+  public static Step populateSpecificStepFromJson(int recipePosition, int position)
+      throws JSONException {
+    Step step = new Step();
+    JSONObject recipeJson = new JSONObject(json);
+    JSONArray results = recipeJson.getJSONArray(RESULTS);
+    JSONObject recipeInfo = results.getJSONObject(recipePosition);
+    JSONArray steps = recipeInfo.getJSONArray(STEPS);
+
+    JSONObject stepInfo = steps.getJSONObject(position);
+    Integer stepId = stepInfo.getInt(ID);
+    String shortDescription = stepInfo.getString(SHORT_DESCRIPTION);
+    String description = stepInfo.getString(DESCRIPTION);
+    String videoUrl = stepInfo.getString(VIDEO_URL);
+    step.setDescription(description);
+    step.setId(stepId);
+    step.setShortDescription(shortDescription);
+    step.setVideoUrl(videoUrl);
+
+    return step;
+
+  }
 }

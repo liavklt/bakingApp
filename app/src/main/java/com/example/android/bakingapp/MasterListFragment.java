@@ -25,6 +25,7 @@ public class MasterListFragment extends Fragment {
   private LinearLayoutManager linearLayoutManager;
   private MasterListAdapter mAdapter;
 
+
   public void initializeRecyclerView(RecyclerView rv, int recipePosition) {
     recyclerView = rv;
     recyclerView.setHasFixedSize(true);
@@ -44,7 +45,6 @@ public class MasterListFragment extends Fragment {
   }
 
   public class FetchStepsTaskListener implements AsyncTaskListener<List<Step>> {
-
     @Override
     public void onTaskPreExecute() {
 
