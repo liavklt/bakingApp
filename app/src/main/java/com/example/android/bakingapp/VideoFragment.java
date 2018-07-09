@@ -7,18 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
 /**
@@ -27,7 +30,7 @@ import com.google.android.exoplayer2.util.Util;
 
 public class VideoFragment extends Fragment {
   ViewRecipeActivity a;
-  SimpleExoPlayerView mPlayerView;
+  PlayerView mPlayerView;
   private String videoUrl;
   private SimpleExoPlayer mExoPlayer;
 
@@ -65,19 +68,29 @@ public class VideoFragment extends Fragment {
   }
 
   private void initializePlayer(Uri uri) {
-    if (mExoPlayer == null) {
-      TrackSelector trackSelector = new DefaultTrackSelector();
-      LoadControl loadControl = new DefaultLoadControl();
-      mExoPlayer = ExoPlayerFactory.newSimpleInstance(a, trackSelector);
+    mPlayerView.requestFocus();
+
+    BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+    TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(
+        bandwidthMeter);
+    TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+    mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+
       mPlayerView.setPlayer(mExoPlayer);
-      // Prepare the MediaSource.
-      String userAgent = Util.getUserAgent(a, "BakingApp");
-      DataSource.Factory factory = new DefaultDataSourceFactory(a, userAgent,
-          new DefaultBandwidthMeter());
+    mExoPlayer.setPlayWhenReady(true);
+
+    // Prepare the MediaSource.
+    String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
+    DataSource.Factory factory = new DefaultDataSourceFactory(getActivity(), userAgent,
+        (TransferListener<? super DataSource>) bandwidthMeter);
       MediaSource mediaSource = new ExtractorMediaSource.Factory(factory).createMediaSource(uri);
-      mExoPlayer.prepare(mediaSource);
-      mExoPlayer.setPlayWhenReady(true);
-    }
+    final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
+
+    mExoPlayer.prepare(loopingSource);
+
+    mPlayerView.setVisibility(View.VISIBLE);
+
   }
 
   @Override
