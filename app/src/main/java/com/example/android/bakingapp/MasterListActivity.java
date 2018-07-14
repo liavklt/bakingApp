@@ -73,9 +73,6 @@ public class MasterListActivity extends AppCompatActivity implements
       finish();
       Toast.makeText(this, "Recipe data not available", Toast.LENGTH_SHORT).show();
     }
-//    recyclerView.setHasFixedSize(true);
-//    linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-//    recyclerView.setLayoutManager(linearLayoutManager);
 
     ingredientsRecyclerView.setHasFixedSize(true);
     linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
@@ -172,37 +169,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
   }
 
-//  public void onTextSelected(int position) throws JSONException {
-//    Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
-//
-//    stepPosition = position;
-//    if (mTwoPane) {
-//      step = JsonUtils.populateRecipeStepsFromJson(recipePosition).get(stepPosition);
-//      ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
-//      viewRecipeFragment.setDescription(step.getDescription());
-//
-//      VideoFragment videoFragment = new VideoFragment();
-//      videoFragment.setVideoUrl(step.getVideoUrl());
-//
-//      getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
-//          .commit();
-//      getSupportFragmentManager().beginTransaction()
-//          .replace(R.id.step_instructions_container, viewRecipeFragment).commit();
-//
-//    } else {
-//
-//      Bundle bundle = new Bundle();
-//      bundle.putParcelable("step", step);
-//      bundle.putInt("position", stepPosition);
-////      bundle.putParcelable("recipeIntent", recipe);
-//
-//      final Intent newIntent = new Intent(this, ViewRecipeActivity.class);
-//      newIntent.putExtras(bundle);
-//      startActivity(newIntent);
-//
-//    }
-//
-//  }
 
 //  @Override
 //  protected void onSaveInstanceState(Bundle outState) {

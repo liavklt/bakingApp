@@ -17,9 +17,9 @@
 -->
 
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-  android:initialLayout="@layout/recipe_widget"
-  android:minHeight="40dp"
-  android:minWidth="40dp"
+  android:initialLayout="@layout/widget_grid_view"
+  android:minHeight="110dip"
+  android:minWidth="250dip"
   android:resizeMode="horizontal|vertical"
   android:updatePeriodMillis="1800000"
   android:widgetCategory="home_screen"/>
