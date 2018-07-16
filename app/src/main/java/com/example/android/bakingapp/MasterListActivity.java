@@ -30,7 +30,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
   public static final String EXTRA_POSITION = "extra_position";
   public static final int DEFAULT_POSITION = -1;
-  public static final String EXTRA_RECIPE_ID = "com.example.android.bakingapp.extra.RECIPE_ID";
   private static final int TASK_LOADER_ID = 0;
 
   List<Recipe> allRecipes;

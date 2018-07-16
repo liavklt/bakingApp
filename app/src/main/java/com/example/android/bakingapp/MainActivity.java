@@ -16,12 +16,13 @@ import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
-import java.io.InputStream;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import org.json.JSONException;
 import utils.JsonUtils;
+import utils.NetworkUtils;
 
 /**
  * Created by lianavklt on 23/06/2018.
@@ -29,11 +30,12 @@ import utils.JsonUtils;
 
 public class MainActivity extends AppCompatActivity {
 
+  private static final String LOG_TAG = MainActivity.class.getSimpleName();
+  private static final String URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
   @BindView(R.id.lv_recipes)
   ListView listView;
-
+  RecipeListAdapter adapter;
   private List<Recipe> recipes;
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -42,24 +44,24 @@ public class MainActivity extends AppCompatActivity {
     ButterKnife.bind(this);
 
     recipes = new ArrayList<>();
-    try {
-      InputStream inputStream = this.getResources().openRawResource(R.raw.recipes);
-      String jsonString = new Scanner(inputStream).useDelimiter("\\A").next();
-      recipes = JsonUtils.getStringsFromJson(jsonString);
-      for (Recipe recipe : recipes) {
-        addIngredientsIntoDb(recipe);
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
+    URL recipeUrl;
+    if (NetworkUtils.isConnected(this)) {
+      recipeUrl = NetworkUtils.buildUrl(URL);
+      adapter = new RecipeListAdapter(this);
+      new FetchRecipesAsyncTask(this, new FetchRecipesTaskListener()).execute(recipeUrl);
+      listView.setAdapter(adapter);
+      listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+          launchMasterListActivity(position);
+        }
+      });
+
+    } else {
+      Toast.makeText(this, "No connection. Try again later.", Toast.LENGTH_LONG).show();
+      listView.setVisibility(View.INVISIBLE);
     }
-    RecipeListAdapter adapter = new RecipeListAdapter(this, recipes);
-    listView.setAdapter(adapter);
-    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        launchMasterListActivity(position);
-      }
-    });
+
 
   }
 
@@ -76,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
     contentValues
         .put(IngredientsEntry.COLUMN_INGREDIENT, TextUtils.join(",", ingredientDescriptions));
     Uri uri = getContentResolver().insert(IngredientsEntry.CONTENT_URI, contentValues);
-    if (uri != null) {
-      Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
-    } else {
-      Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
-    }
+//    if (uri != null) {
+//      Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+//    } else {
+//      Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
+//    }
 
 
   }
@@ -94,4 +96,41 @@ public class MainActivity extends AppCompatActivity {
   }
 
 
+  private class FetchRecipesTaskListener implements AsyncTaskListener<List<Recipe>> {
+
+    @Override
+    public void onTaskPreExecute() {
+
+    }
+
+    @Override
+    public List<Recipe> onTaskGetResult(int position) {
+      return null;
+    }
+
+    @Override
+    public List<Recipe> onTaskGetResult(URL url) {
+      try {
+        String jsonString = NetworkUtils.getResponseFromHttpUrl(url);
+        recipes = JsonUtils.getStringsFromJson(jsonString);
+        for (Recipe recipe : recipes) {
+          addIngredientsIntoDb(recipe);
+        }
+      } catch (IOException | JSONException e) {
+        e.printStackTrace();
+      }
+      return recipes;
+    }
+
+    @Override
+    public void onTaskComplete(List<Recipe> result) {
+
+      if (result != null) {
+        listView.setVisibility(View.VISIBLE);
+        adapter.setRecipeData(result);
+        adapter.notifyDataSetChanged();
+
+      }
+    }
+  }
 }

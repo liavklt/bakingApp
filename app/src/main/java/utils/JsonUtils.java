@@ -26,13 +26,15 @@ public class JsonUtils {
   private static final String QUANTITY = "quantity";
   private static final String MEASURE = "measure";
   private static final String INGREDIENT_DESCRIPTION = "ingredient";
+
   private static String json;
 
   public static List<Recipe> getStringsFromJson(String jsonString) throws JSONException {
     json = jsonString;
     List<Recipe> recipes = new ArrayList<>();
-    JSONObject recipeJson = new JSONObject(jsonString);
-    JSONArray results = recipeJson.getJSONArray(RESULTS);
+
+    JSONArray results = new JSONArray(json);
+
     for (int i = 0; i < results.length(); i++) {
       JSONObject recipeInfo = results.getJSONObject(i);
       Recipe recipe = new Recipe();
@@ -44,14 +46,14 @@ public class JsonUtils {
       recipe.setIngredients(populateIngredientsFromJson(i));
       recipes.add(recipe);
     }
+
     return recipes;
   }
 
   public static List<Ingredient> populateIngredientsFromJson(int position)
       throws JSONException {
     List<Ingredient> ingredientList = new ArrayList<>();
-    JSONObject recipeJson = new JSONObject(json);
-    JSONArray results = recipeJson.getJSONArray(RESULTS);
+    JSONArray results = new JSONArray(json);
     JSONObject recipeInfo = results.getJSONObject(position);
 
     JSONArray ingredients = recipeInfo.getJSONArray(INGREDIENTS);
@@ -72,8 +74,7 @@ public class JsonUtils {
   public static List<Step> populateRecipeStepsFromJson(int position)
       throws JSONException {
     List<Step> stepList = new ArrayList<>();
-    JSONObject recipeJson = new JSONObject(json);
-    JSONArray results = recipeJson.getJSONArray(RESULTS);
+    JSONArray results = new JSONArray(json);
     JSONObject recipeInfo = results.getJSONObject(position);
     JSONArray steps = recipeInfo.getJSONArray(STEPS);
     for (int i = 0; i < steps.length(); i++) {
@@ -98,8 +99,7 @@ public class JsonUtils {
   public static Step populateSpecificStepFromJson(int recipePosition, int position)
       throws JSONException {
     Step step = new Step();
-    JSONObject recipeJson = new JSONObject(json);
-    JSONArray results = recipeJson.getJSONArray(RESULTS);
+    JSONArray results = new JSONArray(json);
     JSONObject recipeInfo = results.getJSONObject(recipePosition);
     JSONArray steps = recipeInfo.getJSONArray(STEPS);
 

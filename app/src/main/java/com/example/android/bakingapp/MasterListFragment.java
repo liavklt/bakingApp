@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.example.android.bakingapp.model.Step;
+import java.net.URL;
 import java.util.List;
 import org.json.JSONException;
 import utils.JsonUtils;
@@ -60,6 +61,11 @@ public class MasterListFragment extends Fragment {
         return null;
       }
       return steps;
+    }
+
+    @Override
+    public List<Step> onTaskGetResult(URL url) {
+      return null;
     }
 
     @Override

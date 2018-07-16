@@ -21,28 +21,33 @@ public class RecipeListAdapter extends BaseAdapter {
   private List<Recipe> mRecipes;
 
 
-
-  public RecipeListAdapter(Context context, List<Recipe> recipes) {
+  public RecipeListAdapter(Context context) {
     mContext = context;
-    mRecipes = recipes;
   }
 
-  private enum Cakes {
-    NUTELLA_PIE("Nutella Pie"), BROWNIES("Brownies"), YELLOW_CAKE("Yellow Cake"), CHEESECAKE(
-        "Cheesecake");
-    private String cakeName;
+  private static int getDrawableForRecipe(CharSequence text) {
+    if (Cakes.BROWNIES.getCakeName().equals(text.toString())) {
+      return R.drawable.brownie;
+    } else if (Cakes.CHEESECAKE.getCakeName().equals(text.toString())) {
+      return R.drawable.cheesecake;
 
-    Cakes(String cakeName) {
-      this.cakeName = cakeName;
-
+    } else if (Cakes.NUTELLA_PIE.getCakeName().equals(text.toString())) {
+      return R.drawable.nutella_pie;
+    } else {
+      return R.drawable.yellow_cake;
     }
 
-    public String getCakeName() {
-      return cakeName;
-    }
   }
+
+  public void setRecipeData(List<Recipe> recipeData) {
+    this.mRecipes = recipeData;
+  }
+
   @Override
   public int getCount() {
+    if (mRecipes == null) {
+      return 0;
+    }
     return mRecipes.size();
   }
 
@@ -74,18 +79,19 @@ public class RecipeListAdapter extends BaseAdapter {
     return textView;
   }
 
-  private static int getDrawableForRecipe(CharSequence text) {
-    if (Cakes.BROWNIES.getCakeName().equals(text.toString())) {
-      return R.drawable.brownie;
-    } else if (Cakes.CHEESECAKE.getCakeName().equals(text.toString())) {
-      return R.drawable.cheesecake;
+  private enum Cakes {
+    NUTELLA_PIE("Nutella Pie"), BROWNIES("Brownies"), YELLOW_CAKE("Yellow Cake"), CHEESECAKE(
+        "Cheesecake");
+    private String cakeName;
 
-    } else if (Cakes.NUTELLA_PIE.getCakeName().equals(text.toString())) {
-      return R.drawable.nutella_pie;
-    } else {
-      return R.drawable.yellow_cake;
+    Cakes(String cakeName) {
+      this.cakeName = cakeName;
+
     }
 
+    public String getCakeName() {
+      return cakeName;
+    }
   }
 
 }
