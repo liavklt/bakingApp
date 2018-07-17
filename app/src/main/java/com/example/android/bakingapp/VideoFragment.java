@@ -1,6 +1,5 @@
 package com.example.android.bakingapp;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,7 +28,7 @@ import com.google.android.exoplayer2.util.Util;
  */
 
 public class VideoFragment extends Fragment {
-  ViewRecipeActivity a;
+
   PlayerView mPlayerView;
   private String videoUrl;
   private SimpleExoPlayer mExoPlayer;
@@ -47,27 +46,21 @@ public class VideoFragment extends Fragment {
   }
 
   @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-
-    if(context instanceof ViewRecipeActivity){
-      a = (ViewRecipeActivity) context;
-    }
-
-  }
-  @Override
-  public View onCreateView(LayoutInflater inflater,  ViewGroup container,
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
 
     mPlayerView = rootView.findViewById(R.id.playerView);
     initializePlayer(Uri.parse(videoUrl));
 
-
     return rootView;
   }
 
   private void initializePlayer(Uri uri) {
+    if (uri == null) {
+      mPlayerView.setVisibility(View.GONE);
+      return;
+    }
     mPlayerView.requestFocus();
 
     BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
@@ -77,14 +70,14 @@ public class VideoFragment extends Fragment {
 
     mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
-      mPlayerView.setPlayer(mExoPlayer);
+    mPlayerView.setPlayer(mExoPlayer);
     mExoPlayer.setPlayWhenReady(true);
 
     // Prepare the MediaSource.
     String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
     DataSource.Factory factory = new DefaultDataSourceFactory(getActivity(), userAgent,
         (TransferListener<? super DataSource>) bandwidthMeter);
-      MediaSource mediaSource = new ExtractorMediaSource.Factory(factory).createMediaSource(uri);
+    MediaSource mediaSource = new ExtractorMediaSource.Factory(factory).createMediaSource(uri);
     final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
 
     mExoPlayer.prepare(loopingSource);

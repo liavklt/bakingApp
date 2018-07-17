@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 public class JsonUtils {
 
-  private static final String RESULTS = "results";
   private static final String ID = "id";
   private static final String NAME = "name";
   private static final String STEPS = "steps";

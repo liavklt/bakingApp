@@ -63,23 +63,6 @@ public class RecipeListAdapter extends BaseAdapter {
     textView.setTextColor(Color.BLACK);
     textView.setTextSize(32);
     textView.setHeight(250);
-//    textView.setBackgroundResource(getDrawableForRecipe(textView.getText()));
     return textView;
   }
-
-  private enum Cakes {
-    NUTELLA_PIE("Nutella Pie"), BROWNIES("Brownies"), YELLOW_CAKE("Yellow Cake"), CHEESECAKE(
-        "Cheesecake");
-    private String cakeName;
-
-    Cakes(String cakeName) {
-      this.cakeName = cakeName;
-
-    }
-
-    public String getCakeName() {
-      return cakeName;
-    }
-  }
-
 }
