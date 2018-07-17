@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
   RecipeListAdapter adapter;
   private List<Recipe> recipes;
 
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -84,6 +85,20 @@ public class MainActivity extends AppCompatActivity {
 //      Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
 //    }
 
+
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+
+
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+
+    super.onSaveInstanceState(outState);
 
   }
 

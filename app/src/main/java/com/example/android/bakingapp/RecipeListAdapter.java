@@ -25,19 +25,6 @@ public class RecipeListAdapter extends BaseAdapter {
     mContext = context;
   }
 
-  private static int getDrawableForRecipe(CharSequence text) {
-    if (Cakes.BROWNIES.getCakeName().equals(text.toString())) {
-      return R.drawable.brownie;
-    } else if (Cakes.CHEESECAKE.getCakeName().equals(text.toString())) {
-      return R.drawable.cheesecake;
-
-    } else if (Cakes.NUTELLA_PIE.getCakeName().equals(text.toString())) {
-      return R.drawable.nutella_pie;
-    } else {
-      return R.drawable.yellow_cake;
-    }
-
-  }
 
   public void setRecipeData(List<Recipe> recipeData) {
     this.mRecipes = recipeData;
@@ -73,9 +60,10 @@ public class RecipeListAdapter extends BaseAdapter {
     textView.setText(mRecipes.get(position).getName());
     textView.setTypeface(null, Typeface.BOLD);
     textView.setGravity(Gravity.CENTER);
-    textView.setTextColor(Color.WHITE);
+    textView.setTextColor(Color.BLACK);
     textView.setTextSize(32);
-    textView.setBackgroundResource(getDrawableForRecipe(textView.getText()));
+    textView.setHeight(250);
+//    textView.setBackgroundResource(getDrawableForRecipe(textView.getText()));
     return textView;
   }
 

@@ -13,7 +13,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
@@ -64,13 +63,11 @@ public class MasterListActivity extends AppCompatActivity implements
     if (intent == null) {
 
       finish();
-      Toast.makeText(this, "Recipe data not available", Toast.LENGTH_SHORT).show();
     }
     recipePosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
     if (recipePosition == DEFAULT_POSITION) {
       // EXTRA_POSITION not found in intent
       finish();
-      Toast.makeText(this, "Recipe data not available", Toast.LENGTH_SHORT).show();
     }
 
     ingredientsRecyclerView.setHasFixedSize(true);
@@ -167,7 +164,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
 
   }
-
 
 //  @Override
 //  protected void onSaveInstanceState(Bundle outState) {
