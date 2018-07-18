@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,11 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 import java.net.URL;
 import java.util.List;
-import org.json.JSONException;
-import utils.JsonUtils;
 
 /**
  * Created by lianavklt on 21/06/2018.
@@ -25,18 +25,33 @@ public class MasterListFragment extends Fragment {
   private RecyclerView recyclerView;
   private LinearLayoutManager linearLayoutManager;
   private MasterListAdapter mAdapter;
+  private Recipe mRecipe;
+  private MasterListActivity activity;
+  private Context mContext;
 
 
-  public void initializeRecyclerView(RecyclerView rv, int recipePosition) {
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof MasterListActivity) {
+      activity = (MasterListActivity) context;
+    }
+    mContext = context;
+
+  }
+
+  public void initializeRecyclerView(RecyclerView rv, Recipe recipe) {
+    this.mRecipe = recipe;
     recyclerView = rv;
     recyclerView.setHasFixedSize(true);
     linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
         false);
     recyclerView.setLayoutManager(linearLayoutManager);
-    mAdapter = new MasterListAdapter(getActivity());
+    mAdapter = new MasterListAdapter(mContext);
     recyclerView.setAdapter(mAdapter);
-    new FetchStepsAsyncTask(getContext(), new FetchStepsTaskListener()).execute(recipePosition);
+    new FetchStepsAsyncTask(getContext(), new FetchStepsTaskListener()).execute(mRecipe.getId());
   }
+
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +61,7 @@ public class MasterListFragment extends Fragment {
   }
 
   public class FetchStepsTaskListener implements AsyncTaskListener<List<Step>> {
+
     @Override
     public void onTaskPreExecute() {
 
@@ -53,14 +69,8 @@ public class MasterListFragment extends Fragment {
 
     @Override
     public List<Step> onTaskGetResult(int position) {
-      List<Step> steps;
-      try {
-        steps = JsonUtils.populateRecipeStepsFromJson(position);
-      } catch (JSONException e) {
-        e.printStackTrace();
-        return null;
-      }
-      return steps;
+
+      return mRecipe.getSteps();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 
 /**
@@ -14,6 +15,7 @@ public class ViewRecipeActivity extends AppCompatActivity {
 
   public static final String EXTRA_POSITION = "extra_position";
   public static final int DEFAULT_POSITION = -1;
+  Recipe recipe;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,9 @@ public class ViewRecipeActivity extends AppCompatActivity {
 //      finish();
 //      Toast.makeText(this, "Recipe data not available", Toast.LENGTH_SHORT).show();
 //    }
+    Intent intent = getIntent();
+    recipe = intent.getParcelableExtra("recipeIntent");
+
     if (savedInstanceState == null) {
       //instantiate new Fragments for Video and step instructions
 
@@ -58,10 +63,11 @@ public class ViewRecipeActivity extends AppCompatActivity {
   public void onBackPressed() {
     super.onBackPressed();
 
-    Intent masterListIntent = new Intent(this, MasterListActivity.class);
-    Bundle bundleObj = new Bundle();
-    bundleObj.putString("fromNewActivity", Boolean.toString(true));
-    masterListIntent.putExtras(bundleObj);
-    startActivityForResult(masterListIntent, 0);
+//    Intent masterListIntent = new Intent(this, MasterListActivity.class);
+//    Bundle bundleObj = new Bundle();
+//    bundleObj.putString("fromNewActivity", Boolean.toString(true));
+//    bundleObj.putParcelable("recipe",recipe);
+//    masterListIntent.putExtras(bundleObj);
+//    startActivity(masterListIntent);
   }
 }

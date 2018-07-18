@@ -57,7 +57,7 @@ public class VideoFragment extends Fragment {
   }
 
   private void initializePlayer(Uri uri) {
-    if (uri == null) {
+    if (uri == null || uri.toString().equals("")) {
       mPlayerView.setVisibility(View.GONE);
       return;
     }
@@ -93,8 +93,10 @@ public class VideoFragment extends Fragment {
   }
 
   private void releasePlayer() {
-    mExoPlayer.stop();
-    mExoPlayer.release();
-    mExoPlayer = null;
+    if (mExoPlayer != null) {
+      mExoPlayer.stop();
+      mExoPlayer.release();
+      mExoPlayer = null;
+    }
   }
 }

@@ -13,19 +13,20 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 import java.util.List;
-import org.json.JSONException;
-import utils.JsonUtils;
 
 // This activity is responsible for displaying the master list of all recipes
 // Implement the MasterListFragment callback, OnTextClickListener
 public class MasterListActivity extends AppCompatActivity implements
-    LoaderManager.LoaderCallbacks<Cursor> {
+    LoaderManager.LoaderCallbacks<Cursor>, MasterListAdapter.OnTextClickListener {
 
   public static final String EXTRA_POSITION = "extra_position";
   public static final int DEFAULT_POSITION = -1;
@@ -40,21 +41,18 @@ public class MasterListActivity extends AppCompatActivity implements
   private CustomCursorAdapter adapter;
   private boolean mTwoPane;
   private int stepPosition;
-  private int recipePosition;
+  //  private int recipePosition;
   private Step step;
+  private Recipe recipe;
 
-//  @Override
-//  protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//    super.onRestoreInstanceState(savedInstanceState);
-//    if(savedInstanceState!=null){
-//      stepPosition = savedInstanceState.getInt("stepPosition");
-//      recipe = savedInstanceState.getParcelable("recipe");
-//    }
-//  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (savedInstanceState != null) {
+      stepPosition = savedInstanceState.getInt("stepPosition");
+      recipe = savedInstanceState.getParcelable("recipe");
+    }
     setContentView(R.layout.activity_select_recipe);
     this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     ButterKnife.bind(this);
@@ -64,11 +62,12 @@ public class MasterListActivity extends AppCompatActivity implements
 
       finish();
     }
-    recipePosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-    if (recipePosition == DEFAULT_POSITION) {
-      // EXTRA_POSITION not found in intent
-      finish();
-    }
+    recipe = intent.getParcelableExtra("recipe");
+//    recipePosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+//    if (recipePosition == DEFAULT_POSITION) {
+//      // EXTRA_POSITION not found in intent
+//      finish();
+//    }
 
     ingredientsRecyclerView.setHasFixedSize(true);
     linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
@@ -79,7 +78,10 @@ public class MasterListActivity extends AppCompatActivity implements
     getSupportLoaderManager().initLoader(TASK_LOADER_ID, null, this);
 
     MasterListFragment masterListFragment = new MasterListFragment();
-    masterListFragment.initializeRecyclerView(recyclerView, recipePosition);
+    masterListFragment.initializeRecyclerView(recyclerView, recipe);
+
+
+
 
     if (findViewById(R.id.view_recipe_linear_layout) != null) {
       mTwoPane = true;
@@ -88,11 +90,8 @@ public class MasterListActivity extends AppCompatActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
-        try {
-          step = JsonUtils.populateRecipeStepsFromJson(recipePosition).get(0);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
+        step = recipe.getSteps().get(0);
+
         viewRecipeFragment.setDescription(
             step.getDescription());
         VideoFragment videoFragment = new VideoFragment();
@@ -114,6 +113,37 @@ public class MasterListActivity extends AppCompatActivity implements
   }
 
 
+  public void onTextSelected(int position) {
+    Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
+
+    stepPosition = position;
+    if (mTwoPane) {
+      step = recipe.getSteps().get(position);
+      ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
+      viewRecipeFragment.setDescription(step.getDescription());
+
+      VideoFragment videoFragment = new VideoFragment();
+      videoFragment.setVideoUrl(step.getVideoUrl());
+
+      getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
+          .commit();
+      getSupportFragmentManager().beginTransaction()
+          .replace(R.id.step_instructions_container, viewRecipeFragment).commit();
+
+    } else {
+
+      Bundle bundle = new Bundle();
+      bundle.putParcelable("step", recipe.getSteps().get(position));
+      bundle.putInt("position", stepPosition);
+      bundle.putParcelable("recipeIntent", recipe);
+
+      final Intent newIntent = new Intent(this, ViewRecipeActivity.class);
+      newIntent.putExtras(bundle);
+      startActivity(newIntent);
+
+    }
+
+  }
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     return new AsyncTaskLoader<Cursor>(this) {
@@ -134,7 +164,7 @@ public class MasterListActivity extends AppCompatActivity implements
         try {
           return getContentResolver()
               .query(IngredientsEntry.CONTENT_URI, null, COLUMN_RECIPE_ID + "=?",
-                  new String[]{String.valueOf(recipePosition + 1)},
+                  new String[]{String.valueOf(recipe.getId())},
                   null);
         } catch (Exception e) {
           System.out.println("Failed to asynchronously load data.");
@@ -165,10 +195,34 @@ public class MasterListActivity extends AppCompatActivity implements
 
   }
 
-//  @Override
-//  protected void onSaveInstanceState(Bundle outState) {
-//    super.onSaveInstanceState(outState);
-//    outState.putParcelable("recipe",recipe);
-//    outState.putInt("stepPosition",stepPosition);
-//  }
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putParcelable("recipe", recipe);
+    outState.putInt("stepPosition", stepPosition);
+  }
+
+
+  static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+      return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
+    public interface ClickListener {
+
+      void onClick(View view, int position);
+    }
+  }
 }
