@@ -13,15 +13,12 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
-import java.util.List;
 
 // This activity is responsible for displaying the master list of all recipes
 // Implement the MasterListFragment callback, OnTextClickListener
@@ -29,10 +26,8 @@ public class MasterListActivity extends AppCompatActivity implements
     LoaderManager.LoaderCallbacks<Cursor>, MasterListAdapter.OnTextClickListener {
 
   public static final String EXTRA_POSITION = "extra_position";
-  public static final int DEFAULT_POSITION = -1;
   private static final int TASK_LOADER_ID = 0;
 
-  List<Recipe> allRecipes;
   @BindView(R.id.steps_recycler_view)
   RecyclerView recyclerView;
   @BindView(R.id.rv_ingredients)
@@ -41,7 +36,6 @@ public class MasterListActivity extends AppCompatActivity implements
   private CustomCursorAdapter adapter;
   private boolean mTwoPane;
   private int stepPosition;
-  //  private int recipePosition;
   private Step step;
   private Recipe recipe;
 
@@ -63,11 +57,7 @@ public class MasterListActivity extends AppCompatActivity implements
       finish();
     }
     recipe = intent.getParcelableExtra("recipe");
-//    recipePosition = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-//    if (recipePosition == DEFAULT_POSITION) {
-//      // EXTRA_POSITION not found in intent
-//      finish();
-//    }
+
 
     ingredientsRecyclerView.setHasFixedSize(true);
     linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
@@ -79,9 +69,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
     MasterListFragment masterListFragment = new MasterListFragment();
     masterListFragment.initializeRecyclerView(recyclerView, recipe);
-
-
-
 
     if (findViewById(R.id.view_recipe_linear_layout) != null) {
       mTwoPane = true;
@@ -114,7 +101,7 @@ public class MasterListActivity extends AppCompatActivity implements
 
 
   public void onTextSelected(int position) {
-    Toast.makeText(this, "Position clicked = " + position, Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, R.string.positionClicked + position, Toast.LENGTH_SHORT).show();
 
     stepPosition = position;
     if (mTwoPane) {
@@ -202,27 +189,4 @@ public class MasterListActivity extends AppCompatActivity implements
     outState.putInt("stepPosition", stepPosition);
   }
 
-
-  static class RecyclerTouchListener implements RecyclerView.OnItemTouchListener {
-
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-      return false;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
-
-    public interface ClickListener {
-
-      void onClick(View view, int position);
-    }
-  }
 }

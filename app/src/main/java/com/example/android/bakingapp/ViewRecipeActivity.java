@@ -14,8 +14,6 @@ import com.example.android.bakingapp.model.Step;
 
 public class ViewRecipeActivity extends AppCompatActivity {
 
-  public static final String EXTRA_POSITION = "extra_position";
-  public static final int DEFAULT_POSITION = -1;
   Recipe recipe;
 
   @Override
@@ -23,12 +21,6 @@ public class ViewRecipeActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_view_recipe);
-//    int stepPosition = getIntent().getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
-//    if (stepPosition == DEFAULT_POSITION) {
-//      // EXTRA_POSITION not found in intent
-//      finish();
-//      Toast.makeText(this, "Recipe data not available", Toast.LENGTH_SHORT).show();
-//    }
     Intent intent = getIntent();
     recipe = intent.getParcelableExtra("recipeIntent");
 
@@ -65,12 +57,5 @@ public class ViewRecipeActivity extends AppCompatActivity {
   @Override
   public void onBackPressed() {
     super.onBackPressed();
-
-//    Intent masterListIntent = new Intent(this, MasterListActivity.class);
-//    Bundle bundleObj = new Bundle();
-//    bundleObj.putString("fromNewActivity", Boolean.toString(true));
-//    bundleObj.putParcelable("recipe",recipe);
-//    masterListIntent.putExtras(bundleObj);
-//    startActivity(masterListIntent);
   }
 }

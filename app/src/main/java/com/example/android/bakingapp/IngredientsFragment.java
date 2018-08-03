@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +19,7 @@ import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 public class IngredientsFragment extends Fragment implements
     LoaderManager.LoaderCallbacks<Cursor> {
 
-  MasterListActivity activity;
   String ingredients;
-  private RecyclerView recyclerView;
-  private LinearLayoutManager linearLayoutManager;
   private CustomCursorAdapter adapter;
 
 
@@ -47,18 +42,6 @@ public class IngredientsFragment extends Fragment implements
     return inflater.inflate(R.layout.fragment_ingredients, container, false);
 
   }
-
-  public void initializeIngredientsRecyclerView(RecyclerView ingredientsRecyclerView,
-      int recipePosition) {
-    recyclerView = ingredientsRecyclerView;
-    recyclerView.setHasFixedSize(true);
-    linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,
-        false);
-    recyclerView.setLayoutManager(linearLayoutManager);
-    adapter = new CustomCursorAdapter(getActivity());
-    recyclerView.setAdapter(adapter);
-  }
-
 
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {

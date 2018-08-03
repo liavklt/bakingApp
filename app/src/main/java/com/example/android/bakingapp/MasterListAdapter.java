@@ -16,13 +16,11 @@ import java.util.List;
 
 public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.ViewHolder> {
 
-  OnTextClickListener mCallback;
   private Context mContext;
   private List<Step> mSteps;
 
   public MasterListAdapter(Context context) {
     mContext = context;
-//    mCallback = (OnTextClickListener) context;
   }
 
   @Override
@@ -46,20 +44,6 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.Vi
         ((OnTextClickListener) mContext).onTextSelected(position);
       }
     });
-
-//    holder.textView.setOnClickListener(new OnClickListener() {
-//      @Override
-//      public void onClick(View v) {
-//
-//
-////        Intent intent = new Intent(mContext, ViewRecipeActivity.class);
-////        Bundle bundle = new Bundle();
-////        bundle.putParcelable("step", mSteps.get(position));
-////        intent.putExtras(bundle);
-////        mContext.startActivity(intent);
-//      }
-//    });
-
   }
 
   @Override

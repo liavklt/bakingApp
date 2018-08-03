@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
       });
 
     } else {
-      Toast.makeText(this, "No connection. Try again later.", Toast.LENGTH_LONG).show();
+      Toast.makeText(this, R.string.connectionError, Toast.LENGTH_LONG).show();
       listView.setVisibility(View.INVISIBLE);
     }
 

@@ -42,10 +42,6 @@ public class VideoFragment extends Fragment {
   public VideoFragment() {
   }
 
-  public String getVideoUrl() {
-    return videoUrl;
-  }
-
   public void setVideoUrl(String videoUrl) {
     this.videoUrl = videoUrl;
   }
@@ -131,10 +127,6 @@ public class VideoFragment extends Fragment {
       mExoPlayer.release();
       mExoPlayer = null;
     }
-  }
-
-  public FrameLayout getStepTextView() {
-    return stepTextViewId;
   }
 
   public void setStepTextView(FrameLayout stepTextView) {
