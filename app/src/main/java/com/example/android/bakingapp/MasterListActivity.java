@@ -101,7 +101,7 @@ public class MasterListActivity extends AppCompatActivity implements
 
 
   public void onTextSelected(int position) {
-    Toast.makeText(this, R.string.positionClicked + position, Toast.LENGTH_SHORT).show();
+    Toast.makeText(this, getString(R.string.positionClicked) + position, Toast.LENGTH_SHORT).show();
 
     stepPosition = position;
     if (mTwoPane) {
@@ -121,7 +121,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
       Bundle bundle = new Bundle();
       bundle.putParcelable("step", recipe.getSteps().get(position));
-      bundle.putInt("position", stepPosition);
       bundle.putParcelable("recipeIntent", recipe);
 
       final Intent newIntent = new Intent(this, ViewRecipeActivity.class);

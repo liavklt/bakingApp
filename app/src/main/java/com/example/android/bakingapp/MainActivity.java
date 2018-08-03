@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
       });
 
     } else {
-      Toast.makeText(this, R.string.connectionError, Toast.LENGTH_LONG).show();
+      Toast.makeText(this, getString(R.string.connectionError), Toast.LENGTH_LONG).show();
       listView.setVisibility(View.INVISIBLE);
     }
 
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, MasterListActivity.class);
     intent.putExtra(MasterListActivity.EXTRA_POSITION, i);
     intent.putExtra("recipe", recipes.get(i));
-    intent.putParcelableArrayListExtra("allRecipes", (ArrayList<? extends Parcelable>) recipes);
     startActivity(intent);
   }
 
