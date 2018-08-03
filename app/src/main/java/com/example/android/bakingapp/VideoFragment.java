@@ -1,11 +1,15 @@
 package com.example.android.bakingapp;
 
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -32,6 +36,7 @@ public class VideoFragment extends Fragment {
   PlayerView mPlayerView;
   private String videoUrl;
   private SimpleExoPlayer mExoPlayer;
+  private FrameLayout stepTextViewId;
 
 
   public VideoFragment() {
@@ -51,9 +56,37 @@ public class VideoFragment extends Fragment {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
 
     mPlayerView = rootView.findViewById(R.id.playerView);
+    LinearLayout.LayoutParams layoutParams = (LayoutParams) mPlayerView.getLayoutParams();
+    changeConfigurationAccordingToOrientation(getResources().getConfiguration(), layoutParams);
     initializePlayer(Uri.parse(videoUrl));
 
     return rootView;
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    LinearLayout.LayoutParams params = (LayoutParams) mPlayerView.getLayoutParams();
+    changeConfigurationAccordingToOrientation(newConfig, params);
+  }
+
+  private void changeConfigurationAccordingToOrientation(Configuration newConfig,
+      LayoutParams params) {
+    FrameLayout stepTv = stepTextViewId;
+
+    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !videoUrl.equals("")) {
+      stepTv.setVisibility(View.GONE);
+      params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+      params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+      mPlayerView.setLayoutParams(params);
+
+
+    } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+      stepTv.setVisibility(View.VISIBLE);
+      params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+      params.height = 600;
+      mPlayerView.setLayoutParams(params);
+    }
   }
 
   private void initializePlayer(Uri uri) {
@@ -98,5 +131,13 @@ public class VideoFragment extends Fragment {
       mExoPlayer.release();
       mExoPlayer = null;
     }
+  }
+
+  public FrameLayout getStepTextView() {
+    return stepTextViewId;
+  }
+
+  public void setStepTextView(FrameLayout stepTextView) {
+    this.stepTextViewId = stepTextView;
   }
 }

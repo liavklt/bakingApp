@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 
@@ -40,6 +41,8 @@ public class ViewRecipeActivity extends AppCompatActivity {
       stepFragment.setDescription(step != null ? step.getDescription() : "");
       VideoFragment videoFragment = new VideoFragment();
       videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+      videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
+
 
       fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
       fragmentManager.beginTransaction().add(R.id.step_instructions_container, stepFragment)
