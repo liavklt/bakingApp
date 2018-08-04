@@ -13,6 +13,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,8 +83,8 @@ public class MasterListActivity extends AppCompatActivity implements
         viewRecipeFragment.setDescription(
             step.getDescription());
         VideoFragment videoFragment = new VideoFragment();
-        videoFragment.setVideoUrl(step.getVideoUrl());
-
+        videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+        videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
         fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
 
         fragmentManager.beginTransaction().add(R.id.step_instructions_container, viewRecipeFragment)
@@ -110,8 +111,8 @@ public class MasterListActivity extends AppCompatActivity implements
       viewRecipeFragment.setDescription(step.getDescription());
 
       VideoFragment videoFragment = new VideoFragment();
-      videoFragment.setVideoUrl(step.getVideoUrl());
-
+      videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+      videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
       getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
           .commit();
       getSupportFragmentManager().beginTransaction()
