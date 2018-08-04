@@ -82,6 +82,9 @@ public class VideoFragment extends Fragment {
       params.width = ViewGroup.LayoutParams.MATCH_PARENT;
       params.height = 600;
       mPlayerView.setLayoutParams(params);
+    } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl
+        .equals("")) {
+      stepTv.setVisibility(View.VISIBLE);
     }
   }
 

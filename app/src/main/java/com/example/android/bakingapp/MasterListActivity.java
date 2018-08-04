@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
@@ -102,8 +101,6 @@ public class MasterListActivity extends AppCompatActivity implements
 
 
   public void onTextSelected(int position) {
-    Toast.makeText(this, getString(R.string.positionClicked) + position, Toast.LENGTH_SHORT).show();
-
     stepPosition = position;
     if (mTwoPane) {
       step = recipe.getSteps().get(position);
@@ -123,6 +120,7 @@ public class MasterListActivity extends AppCompatActivity implements
       Bundle bundle = new Bundle();
       bundle.putParcelable("step", recipe.getSteps().get(position));
       bundle.putParcelable("recipeIntent", recipe);
+      bundle.putInt("position", position);
 
       final Intent newIntent = new Intent(this, ViewRecipeActivity.class);
       newIntent.putExtras(bundle);

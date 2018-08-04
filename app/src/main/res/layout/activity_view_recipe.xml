@@ -2,7 +2,6 @@
 
 <ScrollView
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -10,12 +9,12 @@
     android:id="@+id/view_recipe_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:orientation="vertical"
+    android:paddingTop="16dp"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="16dp">
+    android:background="@android:color/white"
+    android:orientation="vertical">
 
     <FrameLayout android:id="@+id/video_container"
       android:layout_width="match_parent"
@@ -25,7 +24,26 @@
     <FrameLayout android:id="@+id/step_instructions_container"
       android:layout_width="match_parent"
       android:layout_height="180dp"
-      android:scaleType="centerInside"/>
+      android:scaleType="centerInside">
+    </FrameLayout>
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+      <Button
+        android:id="@+id/previousButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/previous"/>
+      <Button
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/next"/>
+
+    </LinearLayout>
 
 
   </LinearLayout>

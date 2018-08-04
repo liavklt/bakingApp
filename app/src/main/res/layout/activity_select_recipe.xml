@@ -14,6 +14,14 @@
     android:paddingRight="16dp"
     android:background="@android:color/white"
     android:orientation="vertical">
+    <TextView
+      android:id="@+id/text"
+      android:textStyle="bold"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ems="10"
+      android:text="@string/ingredients"/>
+
     <android.support.v7.widget.RecyclerView
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/rv_ingredients"
@@ -21,6 +29,17 @@
       android:layout_height="0dp"
       android:layout_weight="7">
     </android.support.v7.widget.RecyclerView>
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@android:color/darker_gray"/>
+    <TextView
+      android:id="@+id/text2"
+      android:textStyle="bold"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:ems="10"
+      android:text="@string/steps"/>
     <fragment
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/fragment_master_list"
