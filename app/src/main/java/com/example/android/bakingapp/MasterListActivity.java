@@ -32,6 +32,7 @@ public class MasterListActivity extends AppCompatActivity implements
   RecyclerView recyclerView;
   @BindView(R.id.rv_ingredients)
   RecyclerView ingredientsRecyclerView;
+
   LinearLayoutManager linearLayoutManager;
   private CustomCursorAdapter adapter;
   private boolean mTwoPane;
@@ -57,7 +58,6 @@ public class MasterListActivity extends AppCompatActivity implements
       finish();
     }
     recipe = intent.getParcelableExtra("recipe");
-
 
     ingredientsRecyclerView.setHasFixedSize(true);
     linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,
@@ -129,6 +129,7 @@ public class MasterListActivity extends AppCompatActivity implements
     }
 
   }
+
   @Override
   public Loader<Cursor> onCreateLoader(int id, Bundle args) {
     return new AsyncTaskLoader<Cursor>(this) {

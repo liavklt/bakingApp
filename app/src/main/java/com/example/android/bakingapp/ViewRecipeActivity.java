@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.example.android.bakingapp.model.Recipe;
 import com.example.android.bakingapp.model.Step;
 
@@ -30,9 +31,15 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_view_recipe);
+    ButterKnife.bind(this);
+    previousButton.setOnClickListener(this);
+
+    nextButton.setOnClickListener(this);
     Intent intent = getIntent();
     recipe = intent.getParcelableExtra("recipeIntent");
     stepPosition = intent.getIntExtra("position", 0);
+
+    setButtonsVisibility();
 
     if (savedInstanceState == null) {
       //instantiate new Fragments for Video and step instructions
@@ -45,10 +52,21 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
       videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
       videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
 
-
       fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
       fragmentManager.beginTransaction().add(R.id.step_instructions_container, stepFragment)
           .commit();
+    }
+  }
+
+  private void setButtonsVisibility() {
+    if (stepPosition == 0) {
+      previousButton.setVisibility(View.INVISIBLE);
+
+    } else if (stepPosition == recipe.getSteps().size() - 1) {
+      nextButton.setVisibility(View.INVISIBLE);
+    } else {
+      previousButton.setVisibility(View.VISIBLE);
+      nextButton.setVisibility(View.VISIBLE);
     }
   }
 
@@ -74,24 +92,28 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     int id = v.getId();
     if (R.id.nextButton == id) {
       Step nextStep = recipe.getSteps().get(stepPosition + 1);
+      stepPosition++;
       handleFragmentsReplacement(nextStep);
     } else if (R.id.previousButton == id) {
       Step previousStep = recipe.getSteps().get(stepPosition - 1);
+      stepPosition--;
       handleFragmentsReplacement(previousStep);
     }
 
   }
 
   private void handleFragmentsReplacement(Step step) {
+    setButtonsVisibility();
     ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
     viewRecipeFragment.setDescription(step.getDescription());
 
     VideoFragment videoFragment = new VideoFragment();
-    videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+    videoFragment.setVideoUrl(step.getVideoUrl());
     videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
     getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
         .commit();
     getSupportFragmentManager().beginTransaction()
         .replace(R.id.step_instructions_container, viewRecipeFragment).commit();
   }
+
 }
