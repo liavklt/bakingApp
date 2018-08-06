@@ -6,7 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
-import com.example.android.bakingapp.MasterListActivity;
+import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
 
 /**
@@ -43,7 +43,7 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
     //setting an empty view in case of no data
     remoteViews.setEmptyView(R.id.widget_list_view, R.id.empty_view);
 
-    Intent startActivityIntent = new Intent(context, MasterListActivity.class);
+    Intent startActivityIntent = new Intent(context, MainActivity.class);
     PendingIntent startActivityPendingIntent = PendingIntent
         .getActivity(context, 0, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     remoteViews.setPendingIntentTemplate(R.id.widget_list_view, startActivityPendingIntent);

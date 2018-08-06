@@ -25,7 +25,6 @@ import com.example.android.bakingapp.model.Step;
 public class MasterListActivity extends AppCompatActivity implements
     LoaderManager.LoaderCallbacks<Cursor>, MasterListAdapter.OnTextClickListener {
 
-  public static final String EXTRA_POSITION = "extra_position";
   private static final int TASK_LOADER_ID = 0;
 
   @BindView(R.id.steps_recycler_view)
@@ -83,10 +82,12 @@ public class MasterListActivity extends AppCompatActivity implements
             step.getDescription());
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
-        videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
+        videoFragment
+            .setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
         fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
 
-        fragmentManager.beginTransaction().add(R.id.step_instructions_container, viewRecipeFragment)
+        fragmentManager.beginTransaction()
+            .add(R.id.step_instructions_container, viewRecipeFragment)
             .commit();
 
       }

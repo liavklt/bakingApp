@@ -41,7 +41,7 @@ public class JsonUtils {
       String recipeName = recipeInfo.getString(NAME);
       recipe.setId(recipeId);
       recipe.setName(recipeName);
-      recipe.setSteps(populateRecipeStepsFromJson(i));
+      recipe.setSteps(populateRecipeStepsFromJson(i, json));
       recipe.setIngredients(populateIngredientsFromJson(i));
       recipes.add(recipe);
     }
@@ -70,7 +70,7 @@ public class JsonUtils {
     return ingredientList;
   }
 
-  public static List<Step> populateRecipeStepsFromJson(int position)
+  public static List<Step> populateRecipeStepsFromJson(int position, String json)
       throws JSONException {
     List<Step> stepList = new ArrayList<>();
     JSONArray results = new JSONArray(json);

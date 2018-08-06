@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
-import com.example.android.bakingapp.MasterListActivity;
+import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.data.IngredientsContract;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
@@ -31,10 +31,10 @@ public class ListProvider implements RemoteViewsFactory {
 
   private void populateListItem() {
 
-    Uri INGREDIENT_URI = IngredientsContract.BASE_CONTENT_URI.buildUpon()
+    Uri ingredientUri = IngredientsContract.BASE_CONTENT_URI.buildUpon()
         .appendPath(IngredientsContract.PATH_INGREDIENTS).build();
     Cursor cursor = context.getContentResolver()
-        .query(INGREDIENT_URI, null, null, null, null);
+        .query(ingredientUri, null, null, null, null);
     try {
       if (cursor != null) {
         while (cursor.moveToNext()) {
@@ -78,9 +78,9 @@ public class ListProvider implements RemoteViewsFactory {
     ListItem listItem = listItemList.get(position);
     remoteView.setTextViewText(R.id.heading, listItem.heading);
     remoteView.setTextViewText(R.id.content, listItem.content);
-    Intent fillinIntent = new Intent(context, MasterListActivity.class);
-    fillinIntent.putExtra(MasterListActivity.EXTRA_POSITION, position);
-    remoteView.setOnClickFillInIntent(R.id.content, fillinIntent);
+    Intent intent = new Intent(context, MainActivity.class);
+
+    remoteView.setOnClickFillInIntent(R.id.content, intent);
 
     return remoteView;
   }
