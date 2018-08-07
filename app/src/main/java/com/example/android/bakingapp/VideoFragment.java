@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,10 +34,16 @@ import com.google.android.exoplayer2.util.Util;
 
 public class VideoFragment extends Fragment {
 
+  private static final String PLAYER_POSITION = "player_position";
+  private static final String STATE = "state";
   PlayerView mPlayerView;
   private String videoUrl;
+  private String thumbnailUrl;
   private SimpleExoPlayer mExoPlayer;
   private FrameLayout stepTextViewId;
+  private long playerPosition;
+  private boolean getPlayerWhenReady;
+
 
 
   public VideoFragment() {
@@ -46,17 +53,50 @@ public class VideoFragment extends Fragment {
     this.videoUrl = videoUrl;
   }
 
+  public void setThumbnailUrl(String thumbnailUrl) {
+    this.thumbnailUrl = thumbnailUrl;
+  }
+
+  @Override
+  public void onStart() {
+    super.onStart();
+    if (Util.SDK_INT > 23) {
+      initializePlayer(Uri.parse(videoUrl), playerPosition, getPlayerWhenReady);
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
+      initializePlayer(Uri.parse(videoUrl), playerPosition, getPlayerWhenReady);
+    }
+  }
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
 
+    if (savedInstanceState != null) {
+      playerPosition = savedInstanceState.getLong(PLAYER_POSITION);
+      getPlayerWhenReady = savedInstanceState.getBoolean(STATE);
+    }
     mPlayerView = rootView.findViewById(R.id.playerView);
     LinearLayout.LayoutParams layoutParams = (LayoutParams) mPlayerView.getLayoutParams();
     changeConfigurationAccordingToOrientation(getResources().getConfiguration(), layoutParams);
-    initializePlayer(Uri.parse(videoUrl));
 
     return rootView;
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle outState) {
+    super.onSaveInstanceState(outState);
+    playerPosition = mExoPlayer.getCurrentPosition();
+    outState.putLong(PLAYER_POSITION, playerPosition);
+    getPlayerWhenReady = mExoPlayer.getPlayWhenReady();
+    outState.putBoolean(STATE, getPlayerWhenReady);
+
   }
 
   @Override
@@ -88,7 +128,7 @@ public class VideoFragment extends Fragment {
     }
   }
 
-  private void initializePlayer(Uri uri) {
+  private void initializePlayer(Uri uri, long playerPosition, boolean getPlayerWhenReady) {
     if (uri == null || uri.toString().equals("")) {
       mPlayerView.setVisibility(View.GONE);
       return;
@@ -103,7 +143,8 @@ public class VideoFragment extends Fragment {
     mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
     mPlayerView.setPlayer(mExoPlayer);
-    mExoPlayer.setPlayWhenReady(true);
+    mExoPlayer.seekTo(playerPosition);
+    mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
 
     // Prepare the MediaSource.
     String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
