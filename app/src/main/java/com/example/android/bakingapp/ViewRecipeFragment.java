@@ -2,6 +2,7 @@ package com.example.android.bakingapp;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,15 +19,15 @@ public class ViewRecipeFragment extends Fragment {
 
   private String description;
 
+  public ViewRecipeFragment() {
+  }
+
   public String getDescription() {
     return description;
   }
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public ViewRecipeFragment() {
   }
 
   @Override
@@ -38,6 +39,13 @@ public class ViewRecipeFragment extends Fragment {
     }
 
   }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
+  }
+
   @Override
   public View onCreateView(LayoutInflater inflater,  ViewGroup container,
       Bundle savedInstanceState) {

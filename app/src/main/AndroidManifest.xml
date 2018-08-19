@@ -24,11 +24,9 @@
       </intent-filter>
     </activity>
     <activity
-      android:configChanges="screenSize|orientation"
       android:name=".MasterListActivity"
       android:parentActivityName=".MainActivity"/>
     <activity
-      android:configChanges="screenSize|orientation"
       android:name=".ViewRecipeActivity"
       android:parentActivityName=".MasterListActivity"/>
 

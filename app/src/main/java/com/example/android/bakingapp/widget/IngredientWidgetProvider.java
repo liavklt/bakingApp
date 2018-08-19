@@ -16,6 +16,11 @@ import com.example.android.bakingapp.R;
 public class IngredientWidgetProvider extends AppWidgetProvider {
 
   @Override
+  public void onReceive(Context context, Intent intent) {
+    super.onReceive(context, intent);
+  }
+
+  @Override
   public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
     final int N = appWidgetIds.length;
 

@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +46,6 @@ public class VideoFragment extends Fragment {
   private boolean getPlayerWhenReady;
 
 
-
   public VideoFragment() {
   }
 
@@ -71,6 +71,12 @@ public class VideoFragment extends Fragment {
     if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
       initializePlayer(Uri.parse(videoUrl), playerPosition, getPlayerWhenReady);
     }
+  }
+
+  @Override
+  public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
   }
 
   @Override
@@ -160,9 +166,19 @@ public class VideoFragment extends Fragment {
   }
 
   @Override
-  public void onDestroy() {
-    super.onDestroy();
-    releasePlayer();
+  public void onPause() {
+    super.onPause();
+    if (Util.SDK_INT <= 23) {
+      releasePlayer();
+    }
+  }
+
+  @Override
+  public void onStop() {
+    super.onStop();
+    if (Util.SDK_INT > 23) {
+      releasePlayer();
+    }
   }
 
   private void releasePlayer() {
