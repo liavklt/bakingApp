@@ -3,9 +3,12 @@ package com.example.android.bakingapp.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 import com.example.android.bakingapp.MainActivity;
 import com.example.android.bakingapp.R;
 
@@ -17,7 +20,20 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
   @Override
   public void onReceive(Context context, Intent intent) {
-    super.onReceive(context, intent);
+    Toast.makeText(context, "Action:" + intent.getAction(), Toast.LENGTH_SHORT).show();
+    SharedPreferences sharedPreferences = context
+        .getSharedPreferences("RecipePreference", Context.MODE_PRIVATE);
+    int recipeKey = sharedPreferences.getInt("recipeKey", -1);
+    if (recipeKey != -1) {
+      AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+      int[] appWidgetIds = appWidgetManager
+          .getAppWidgetIds(new ComponentName(context, IngredientWidgetProvider.class));
+
+      onUpdate(context, appWidgetManager, appWidgetIds);
+
+    }
+
+
   }
 
   @Override
@@ -27,6 +43,8 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
     for (int i = 0; i < N; ++i) {
       RemoteViews remoteViews = updateWidgetListView(context,
           appWidgetIds[i]);
+      appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.widget_list_view);
+
       appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
     }
     super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -39,8 +57,11 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
     //RemoteViews Service needed to provide adapter for ListView
     Intent svcIntent = new Intent(context, IngredientWidgetService.class);
+    int appWidgetIds[] = AppWidgetManager.getInstance(context)
+        .getAppWidgetIds(new ComponentName(context, IngredientWidgetProvider.class));
+
     //passing app widget id to that RemoteViews Service
-    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+    svcIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
     //setting adapter to listview of the widget
     remoteViews.setRemoteAdapter(appWidgetId, R.id.widget_list_view,

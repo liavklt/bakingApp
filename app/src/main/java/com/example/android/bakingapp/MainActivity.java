@@ -1,7 +1,11 @@
 package com.example.android.bakingapp;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,12 +13,14 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
 import com.example.android.bakingapp.model.Ingredient;
 import com.example.android.bakingapp.model.Recipe;
+import com.example.android.bakingapp.widget.IngredientWidgetProvider;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,12 +40,14 @@ public class MainActivity extends AppCompatActivity {
   @BindView(R.id.lv_recipes)
   ListView listView;
   RecipeListAdapter adapter;
+  IngredientWidgetProvider ingredientWidgetProvider;
   private List<Recipe> recipes;
-
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    ingredientWidgetProvider = new IngredientWidgetProvider();
+    registerReceiver(ingredientWidgetProvider, new IntentFilter("APPWIDGET_UPDATE"));
     setContentView(R.layout.activity_main);
     ButterKnife.bind(this);
 
@@ -105,6 +113,21 @@ public class MainActivity extends AppCompatActivity {
     Intent intent = new Intent(this, MasterListActivity.class);
 //    intent.putExtra(MasterListActivity.EXTRA_POSITION, i);
     intent.putExtra("recipe", recipes.get(i));
+    SharedPreferences sharedPreferences = this
+        .getSharedPreferences("RecipePreference", MODE_PRIVATE);
+    sharedPreferences.edit().putInt("recipeKey", recipes.get(i).getId()).apply();
+    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+    RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.list_row);
+    ComponentName thisWidget = new ComponentName(this, IngredientWidgetProvider.class);
+    remoteViews.setTextViewText(R.id.heading, recipes.get(i).getName());
+    remoteViews.setTextViewText(R.id.content,
+        recipes.get(i).getIngredients().toString().replaceAll(",", "\n"));
+    int ids[] = AppWidgetManager.getInstance(this)
+        .getAppWidgetIds(new ComponentName(this, IngredientWidgetProvider.class));
+
+    ingredientWidgetProvider.onUpdate(this, appWidgetManager, ids);
+//    appWidgetManager.updateAppWidget(thisWidget, remoteViews);
+
     startActivity(intent);
   }
 

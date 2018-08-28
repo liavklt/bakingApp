@@ -1,7 +1,10 @@
 package com.example.android.bakingapp.widget;
 
+import static com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry.COLUMN_RECIPE_ID;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.widget.RemoteViews;
@@ -23,6 +26,12 @@ public class ListProvider implements RemoteViewsFactory {
   private int appWidgetId;
   private List<ListItem> listItemList = new ArrayList<>();
 
+  public ListProvider(Context context) {
+    this.context = context;
+    populateListItem();
+
+  }
+
   public ListProvider(Context context, Intent intent, int appWidgetId) {
     this.context = context;
     this.appWidgetId = appWidgetId;
@@ -33,8 +42,12 @@ public class ListProvider implements RemoteViewsFactory {
 
     Uri ingredientUri = IngredientsContract.BASE_CONTENT_URI.buildUpon()
         .appendPath(IngredientsContract.PATH_INGREDIENTS).build();
+    SharedPreferences sharedPreferences = context
+        .getSharedPreferences("RecipePreference", Context.MODE_PRIVATE);
+    int recipeKey = sharedPreferences.getInt("recipeKey", -1);
     Cursor cursor = context.getContentResolver()
-        .query(ingredientUri, null, null, null, null);
+        .query(ingredientUri, null, COLUMN_RECIPE_ID + "=?",
+            new String[]{String.valueOf(recipeKey)}, null);
     try {
       if (cursor != null) {
         while (cursor.moveToNext()) {
@@ -73,6 +86,8 @@ public class ListProvider implements RemoteViewsFactory {
 
   @Override
   public RemoteViews getViewAt(int position) {
+    listItemList.clear();
+    populateListItem();
     final RemoteViews remoteView = new RemoteViews(
         context.getPackageName(), R.layout.list_row);
     ListItem listItem = listItemList.get(position);
