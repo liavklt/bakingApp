@@ -96,6 +96,12 @@ public class MainActivity extends AppCompatActivity {
   }
 
   @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    unregisterReceiver(ingredientWidgetProvider);
+  }
+
+  @Override
   protected void onRestoreInstanceState(Bundle savedInstanceState) {
     super.onRestoreInstanceState(savedInstanceState);
 

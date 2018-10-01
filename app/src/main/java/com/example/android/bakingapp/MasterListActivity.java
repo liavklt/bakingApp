@@ -82,6 +82,8 @@ public class MasterListActivity extends AppCompatActivity implements
             step.getDescription());
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+        videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
+
         videoFragment
             .setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
         fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
@@ -110,6 +112,8 @@ public class MasterListActivity extends AppCompatActivity implements
 
       VideoFragment videoFragment = new VideoFragment();
       videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+      videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
+
       videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
       getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
           .commit();

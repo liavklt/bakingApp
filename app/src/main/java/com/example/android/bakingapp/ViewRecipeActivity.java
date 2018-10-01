@@ -50,6 +50,8 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
       stepFragment.setDescription(step != null ? step.getDescription() : "");
       VideoFragment videoFragment = new VideoFragment();
       videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+      videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
+
       videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
 
       fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
@@ -109,6 +111,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
 
     VideoFragment videoFragment = new VideoFragment();
     videoFragment.setVideoUrl(step.getVideoUrl());
+    videoFragment.setThumbnailUrl(step.getThumbnailUrl());
     videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
     getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
         .commit();

@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
+import java.io.IOException;
 
 /**
  * Created by lianavklt on 02/07/2018.
@@ -35,6 +37,7 @@ import com.google.android.exoplayer2.util.Util;
 
 public class VideoFragment extends Fragment {
 
+  private static final String TAG = VideoFragment.class.getName();
   private static final String PLAYER_POSITION = "player_position";
   private static final String STATE = "state";
   PlayerView mPlayerView;
@@ -79,6 +82,7 @@ public class VideoFragment extends Fragment {
     setRetainInstance(true);
   }
 
+
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -98,9 +102,9 @@ public class VideoFragment extends Fragment {
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    playerPosition = mExoPlayer.getCurrentPosition();
+    playerPosition = mExoPlayer != null ? mExoPlayer.getCurrentPosition() : 0;
     outState.putLong(PLAYER_POSITION, playerPosition);
-    getPlayerWhenReady = mExoPlayer.getPlayWhenReady();
+    getPlayerWhenReady = mExoPlayer != null && mExoPlayer.getPlayWhenReady();
     outState.putBoolean(STATE, getPlayerWhenReady);
 
   }
@@ -123,6 +127,7 @@ public class VideoFragment extends Fragment {
       mPlayerView.setLayoutParams(params);
 
 
+
     } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
       stepTv.setVisibility(View.VISIBLE);
       params.width = ViewGroup.LayoutParams.MATCH_PARENT;
@@ -137,6 +142,13 @@ public class VideoFragment extends Fragment {
   private void initializePlayer(Uri uri, long playerPosition, boolean getPlayerWhenReady) {
     if (uri == null || uri.toString().equals("")) {
       mPlayerView.setVisibility(View.GONE);
+      try {
+        mPlayerView.setDefaultArtwork(MediaStore.Images.Media
+            .getBitmap(getContext().getContentResolver(), Uri.parse(thumbnailUrl)));
+      } catch (IOException | NullPointerException e) {
+
+        e.printStackTrace();
+      }
       return;
     }
     mPlayerView.requestFocus();
@@ -148,7 +160,6 @@ public class VideoFragment extends Fragment {
 
     mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
 
-    mPlayerView.setPlayer(mExoPlayer);
     mExoPlayer.seekTo(playerPosition);
     mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
 
@@ -160,8 +171,10 @@ public class VideoFragment extends Fragment {
     final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
 
     mExoPlayer.prepare(loopingSource);
+    mPlayerView.setPlayer(mExoPlayer);
 
     mPlayerView.setVisibility(View.VISIBLE);
+
 
   }
 
@@ -173,12 +186,19 @@ public class VideoFragment extends Fragment {
     }
   }
 
+
   @Override
   public void onStop() {
     super.onStop();
     if (Util.SDK_INT > 23) {
       releasePlayer();
     }
+  }
+
+  @Override
+  public void onDestroy() {
+    super.onDestroy();
+    releasePlayer();
   }
 
   private void releasePlayer() {
