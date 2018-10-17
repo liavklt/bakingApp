@@ -1,6 +1,6 @@
 package com.example.android.bakingapp;
 
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +15,21 @@ import android.widget.TextView;
 
 public class ViewRecipeFragment extends Fragment {
 
-  ViewRecipeActivity a;
+  private TextView stepTv;
+  private String videoUrl;
+  private boolean isOnTablet;
 
   private String description;
 
   public ViewRecipeFragment() {
+  }
+
+  public void setOnTablet(boolean onTablet) {
+    isOnTablet = onTablet;
+  }
+
+  public void setVideoUrl(String videoUrl) {
+    this.videoUrl = videoUrl;
   }
 
   public String getDescription() {
@@ -28,16 +38,6 @@ public class ViewRecipeFragment extends Fragment {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  @Override
-  public void onAttach(Context context) {
-    super.onAttach(context);
-
-    if(context instanceof ViewRecipeActivity){
-      a = (ViewRecipeActivity) context;
-    }
-
   }
 
   @Override
@@ -51,9 +51,32 @@ public class ViewRecipeFragment extends Fragment {
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_view_recipe, container, false);
 
-    TextView stepTv = rootView.findViewById(R.id.step_textview);
+    stepTv = rootView.findViewById(R.id.step_textview);
     stepTv.setText(getDescription());
+    changeConfigurationAccordingToOrientation(getResources().getConfiguration());
 
     return rootView;
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    changeConfigurationAccordingToOrientation(newConfig);
+  }
+
+  private void changeConfigurationAccordingToOrientation(Configuration newConfig) {
+
+    if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !videoUrl.equals("")
+        && !isOnTablet) {
+      stepTv.setVisibility(View.GONE);
+
+
+    } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+      stepTv.setVisibility(View.VISIBLE);
+
+    } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl
+        .equals("") && !isOnTablet) {
+      stepTv.setVisibility(View.VISIBLE);
+    }
   }
 }

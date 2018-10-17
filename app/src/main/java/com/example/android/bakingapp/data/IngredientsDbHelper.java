@@ -9,12 +9,12 @@ import com.example.android.bakingapp.data.IngredientsContract.IngredientsEntry;
  * Created by lianavklt on 03/07/2018.
  */
 
-public class IngredientsDbHelper extends SQLiteOpenHelper {
+class IngredientsDbHelper extends SQLiteOpenHelper {
 
   private static final String DATABASE_NAME = "ingredients.db";
   private static final int DATABASE_VERSION = 2;
 
-  public IngredientsDbHelper(Context context) {
+  IngredientsDbHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 

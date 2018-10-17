@@ -1,9 +1,7 @@
 package com.example.android.bakingapp;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import com.example.android.bakingapp.model.Step;
-import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -13,13 +11,10 @@ import java.util.List;
 class FetchStepsAsyncTask extends AsyncTask<Integer, Void, List<Step>> {
 
 
-  private WeakReference<Context> context;
   private AsyncTaskListener<List<Step>> asyncTaskListener;
 
 
-  public FetchStepsAsyncTask(Context context,
-      AsyncTaskListener<List<Step>> asyncTaskListener) {
-    this.context = new WeakReference<>(context);
+  public FetchStepsAsyncTask(AsyncTaskListener<List<Step>> asyncTaskListener) {
     this.asyncTaskListener = asyncTaskListener;
   }
 

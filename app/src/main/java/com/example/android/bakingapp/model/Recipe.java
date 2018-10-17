@@ -31,7 +31,7 @@ public class Recipe implements Parcelable {
   public Recipe() {
   }
 
-  public Recipe(Parcel source) {
+  private Recipe(Parcel source) {
     name = source.readString();
     id = source.readInt();
     steps = new ArrayList<>();

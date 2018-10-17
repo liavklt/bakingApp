@@ -19,12 +19,13 @@ import com.example.android.bakingapp.model.Step;
 
 public class ViewRecipeActivity extends AppCompatActivity implements OnClickListener {
 
-  Recipe recipe;
-  int stepPosition;
+  private Recipe recipe;
+  private int stepPosition;
   @BindView(R.id.previousButton)
-  Button previousButton;
+  private Button previousButton;
   @BindView(R.id.nextButton)
-  Button nextButton;
+  private Button nextButton;
+  private Step step;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -43,22 +44,53 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
 
     if (savedInstanceState == null) {
       //instantiate new Fragments for Video and step instructions
-
+      step = getIntent().getParcelableExtra("step");
       android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+
+//      int orientation = this.getResources().getConfiguration().orientation;
+//      if(orientation == Configuration.ORIENTATION_LANDSCAPE){
+//        FrameLayout stepInstructionsLayout = findViewById(R.id.step_instructions_container);
+//        stepInstructionsLayout.setVisibility(View.GONE);
+//        FrameLayout videoLayout = findViewById(R.id.video_container);
+//        LayoutParams layoutParams = videoLayout.getLayoutParams();
+//        layoutParams.width = LayoutParams.MATCH_PARENT;
+//        layoutParams.height = LayoutParams.MATCH_PARENT;
+//        videoLayout.setLayoutParams(layoutParams);
+//      }else{
       ViewRecipeFragment stepFragment = new ViewRecipeFragment();
-      Step step = getIntent().getParcelableExtra("step");
       stepFragment.setDescription(step != null ? step.getDescription() : "");
-      VideoFragment videoFragment = new VideoFragment();
-      videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
-      videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
-
-      videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
-
-      fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
+      stepFragment.setVideoUrl(step.getVideoUrl());
       fragmentManager.beginTransaction().add(R.id.step_instructions_container, stepFragment)
           .commit();
+//      }
+
+      if (step.getVideoUrl() != null && !step.getVideoUrl().equals("")) {
+        VideoFragment videoFragment = new VideoFragment();
+        videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+        videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
+
+        videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
+
+        fragmentManager.beginTransaction().add(R.id.video_container, videoFragment).commit();
+      }
     }
   }
+
+//  @Override
+//  protected void onResume() {
+//    super.onResume();
+//    int orientation = this.getResources().getConfiguration().orientation;
+//    if(orientation == Configuration.ORIENTATION_LANDSCAPE && !step.getVideoUrl().equals("")){
+//      FrameLayout stepInstructionsLayout = findViewById(R.id.step_instructions_container);
+//      stepInstructionsLayout.setVisibility(View.GONE);
+//      FrameLayout videoLayout = findViewById(R.id.video_container);
+//      LayoutParams layoutParams = videoLayout.getLayoutParams();
+//      layoutParams.width = LayoutParams.MATCH_PARENT;
+//      layoutParams.height = LayoutParams.MATCH_PARENT;
+//      videoLayout.setLayoutParams(layoutParams);
+//    }
+//  }
+
 
   private void setButtonsVisibility() {
     if (stepPosition == 0) {
@@ -85,11 +117,6 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
   }
 
   @Override
-  public void onBackPressed() {
-    super.onBackPressed();
-  }
-
-  @Override
   public void onClick(View v) {
     int id = v.getId();
     if (R.id.nextButton == id) {
@@ -108,6 +135,7 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     setButtonsVisibility();
     ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
     viewRecipeFragment.setDescription(step.getDescription());
+    viewRecipeFragment.setVideoUrl(step.getVideoUrl());
 
     VideoFragment videoFragment = new VideoFragment();
     videoFragment.setVideoUrl(step.getVideoUrl());

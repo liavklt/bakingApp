@@ -2,7 +2,6 @@ package com.example.android.bakingapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.ArrayList;
 
 /**
  * Created by lianavklt on 23/06/2018.
@@ -10,13 +9,7 @@ import java.util.ArrayList;
 
 public class Step implements Parcelable {
 
-  private Integer id;
-  private String shortDescription;
-  private String description;
-  private String videoUrl;
-  private String thumbnailUrl;
-
-  public static final Parcelable.Creator<Step> CREATOR =
+  static final Parcelable.Creator<Step> CREATOR =
       new Parcelable.Creator<Step>() {
         @Override
         public Step createFromParcel(Parcel source) {
@@ -28,8 +21,13 @@ public class Step implements Parcelable {
           return new Step[size];
         }
       };
+  private Integer id;
+  private String shortDescription;
+  private String description;
+  private String videoUrl;
+  private String thumbnailUrl;
 
-  public Step(Parcel source) {
+  private Step(Parcel source) {
     id = source.readInt();
     shortDescription = source.readString();
     description = source.readString();
@@ -38,10 +36,6 @@ public class Step implements Parcelable {
   }
 
   public Step() {
-  }
-
-  public Integer getId() {
-    return id;
   }
 
   public void setId(Integer id) {
@@ -74,10 +68,6 @@ public class Step implements Parcelable {
 
   public String getThumbnailUrl() {
     return thumbnailUrl;
-  }
-
-  public void setThumbnailUrl(String thumbnailUrl) {
-    this.thumbnailUrl = thumbnailUrl;
   }
 
   @Override

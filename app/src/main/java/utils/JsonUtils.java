@@ -49,7 +49,7 @@ public class JsonUtils {
     return recipes;
   }
 
-  public static List<Ingredient> populateIngredientsFromJson(int position)
+  private static List<Ingredient> populateIngredientsFromJson(int position)
       throws JSONException {
     List<Ingredient> ingredientList = new ArrayList<>();
     JSONArray results = new JSONArray(json);
@@ -70,7 +70,7 @@ public class JsonUtils {
     return ingredientList;
   }
 
-  public static List<Step> populateRecipeStepsFromJson(int position, String json)
+  private static List<Step> populateRecipeStepsFromJson(int position, String json)
       throws JSONException {
     List<Step> stepList = new ArrayList<>();
     JSONArray results = new JSONArray(json);
@@ -92,27 +92,6 @@ public class JsonUtils {
     }
 
     return stepList;
-
-  }
-
-  public static Step populateSpecificStepFromJson(int recipePosition, int position)
-      throws JSONException {
-    Step step = new Step();
-    JSONArray results = new JSONArray(json);
-    JSONObject recipeInfo = results.getJSONObject(recipePosition);
-    JSONArray steps = recipeInfo.getJSONArray(STEPS);
-
-    JSONObject stepInfo = steps.getJSONObject(position);
-    Integer stepId = stepInfo.getInt(ID);
-    String shortDescription = stepInfo.getString(SHORT_DESCRIPTION);
-    String description = stepInfo.getString(DESCRIPTION);
-    String videoUrl = stepInfo.getString(VIDEO_URL);
-    step.setDescription(description);
-    step.setId(stepId);
-    step.setShortDescription(shortDescription);
-    step.setVideoUrl(videoUrl);
-
-    return step;
 
   }
 }

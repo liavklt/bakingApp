@@ -55,17 +55,13 @@ class CustomCursorAdapter extends RecyclerView.Adapter<CustomCursorAdapter.Ingre
     return mCursor.getCount();
   }
 
-  public Cursor swapCursor(Cursor cursor) {
-    if (mCursor == cursor) {
-      return null;
-    }
-    Cursor temp = mCursor;
+  public void swapCursor(Cursor cursor) {
+
     this.mCursor = cursor;
 
     if (cursor != null) {
       this.notifyDataSetChanged();
     }
-    return temp;
   }
 
   class IngredientsViewHolder extends ViewHolder {

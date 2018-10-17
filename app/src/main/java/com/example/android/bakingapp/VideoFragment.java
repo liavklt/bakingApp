@@ -7,6 +7,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class VideoFragment extends Fragment {
   private static final String TAG = VideoFragment.class.getName();
   private static final String PLAYER_POSITION = "player_position";
   private static final String STATE = "state";
-  PlayerView mPlayerView;
+  private PlayerView mPlayerView;
   private String videoUrl;
   private String thumbnailUrl;
   private SimpleExoPlayer mExoPlayer;
@@ -64,7 +65,7 @@ public class VideoFragment extends Fragment {
   public void onStart() {
     super.onStart();
     if (Util.SDK_INT > 23) {
-      initializePlayer(Uri.parse(videoUrl), playerPosition, getPlayerWhenReady);
+      initializePlayerView();
     }
   }
 
@@ -72,13 +73,25 @@ public class VideoFragment extends Fragment {
   public void onResume() {
     super.onResume();
     if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
-      initializePlayer(Uri.parse(videoUrl), playerPosition, getPlayerWhenReady);
+      initializePlayerView();
     }
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (savedInstanceState != null) {
+      playerPosition = savedInstanceState.getLong(PLAYER_POSITION);
+      getPlayerWhenReady = savedInstanceState.getBoolean(STATE);
+    }
+    BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+    TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(
+        bandwidthMeter);
+    TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+
+    mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
+    initializePlayer(videoUrl, bandwidthMeter);
+
     setRetainInstance(true);
   }
 
@@ -88,15 +101,31 @@ public class VideoFragment extends Fragment {
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
 
-    if (savedInstanceState != null) {
-      playerPosition = savedInstanceState.getLong(PLAYER_POSITION);
-      getPlayerWhenReady = savedInstanceState.getBoolean(STATE);
-    }
     mPlayerView = rootView.findViewById(R.id.playerView);
     LinearLayout.LayoutParams layoutParams = (LayoutParams) mPlayerView.getLayoutParams();
     changeConfigurationAccordingToOrientation(getResources().getConfiguration(), layoutParams);
 
+    initializePlayerView();
     return rootView;
+  }
+
+  private void initializePlayerView() {
+    if (videoUrl == null || videoUrl.equals("")) {
+      mPlayerView.setVisibility(View.GONE);
+      try {
+        mPlayerView.setDefaultArtwork(MediaStore.Images.Media
+            .getBitmap(getContext().getContentResolver(), Uri.parse(thumbnailUrl)));
+      } catch (IOException | NullPointerException e) {
+
+        Log.i(TAG, "No ThumbnailUrl is available");
+      }
+      return;
+    }
+    mPlayerView.requestFocus();
+
+    mPlayerView.setPlayer(mExoPlayer);
+
+    mPlayerView.setVisibility(View.VISIBLE);
   }
 
   @Override
@@ -118,81 +147,37 @@ public class VideoFragment extends Fragment {
 
   private void changeConfigurationAccordingToOrientation(Configuration newConfig,
       LayoutParams params) {
-    FrameLayout stepTv = stepTextViewId;
 
     if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && !videoUrl.equals("")) {
-      stepTv.setVisibility(View.GONE);
       params.width = ViewGroup.LayoutParams.MATCH_PARENT;
       params.height = ViewGroup.LayoutParams.MATCH_PARENT;
       mPlayerView.setLayoutParams(params);
 
-
-
     } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-      stepTv.setVisibility(View.VISIBLE);
       params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-      params.height = 600;
       mPlayerView.setLayoutParams(params);
-    } else if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && videoUrl
-        .equals("")) {
-      stepTv.setVisibility(View.VISIBLE);
     }
   }
 
-  private void initializePlayer(Uri uri, long playerPosition, boolean getPlayerWhenReady) {
-    if (uri == null || uri.toString().equals("")) {
-      mPlayerView.setVisibility(View.GONE);
-      try {
-        mPlayerView.setDefaultArtwork(MediaStore.Images.Media
-            .getBitmap(getContext().getContentResolver(), Uri.parse(thumbnailUrl)));
-      } catch (IOException | NullPointerException e) {
+  private void initializePlayer(String uri,
+      BandwidthMeter bandwidthMeter) {
 
-        e.printStackTrace();
-      }
-      return;
-    }
-    mPlayerView.requestFocus();
-
-    BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-    TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(
-        bandwidthMeter);
-    TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
-
-    mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
-
-    mExoPlayer.seekTo(playerPosition);
+    Uri videoUri = Uri.parse(uri);
+    mExoPlayer.seekTo(playerPosition); //TODO check in landscape mode, it does not keep position
     mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
 
     // Prepare the MediaSource.
     String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
     DataSource.Factory factory = new DefaultDataSourceFactory(getActivity(), userAgent,
         (TransferListener<? super DataSource>) bandwidthMeter);
-    MediaSource mediaSource = new ExtractorMediaSource.Factory(factory).createMediaSource(uri);
+
+    MediaSource mediaSource = new ExtractorMediaSource.Factory(factory)
+        .createMediaSource(videoUri);
     final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
 
     mExoPlayer.prepare(loopingSource);
-    mPlayerView.setPlayer(mExoPlayer);
-
-    mPlayerView.setVisibility(View.VISIBLE);
 
 
-  }
-
-  @Override
-  public void onPause() {
-    super.onPause();
-    if (Util.SDK_INT <= 23) {
-      releasePlayer();
-    }
-  }
-
-
-  @Override
-  public void onStop() {
-    super.onStop();
-    if (Util.SDK_INT > 23) {
-      releasePlayer();
-    }
   }
 
   @Override

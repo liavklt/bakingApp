@@ -34,16 +34,10 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.Vi
   }
 
   @Override
-  public void onBindViewHolder(@NonNull MasterListAdapter.ViewHolder holder, final int position) {
+  public void onBindViewHolder(@NonNull MasterListAdapter.ViewHolder holder, int position) {
     String shortDescription = mSteps.get(position).getShortDescription();
     holder.textView.setText(shortDescription);
-    holder.textView.setOnClickListener(new View.OnClickListener() {
-
-      @Override
-      public void onClick(View v) {
-        ((OnTextClickListener) mContext).onTextSelected(position);
-      }
-    });
+    holder.textView.setOnClickListener(new MasterOnClickListener(position));
   }
 
   @Override
@@ -73,5 +67,19 @@ public class MasterListAdapter extends RecyclerView.Adapter<MasterListAdapter.Vi
       textView = itemView.findViewById(R.id.tv_recipe_item);
     }
 
+  }
+
+  public class MasterOnClickListener implements View.OnClickListener {
+
+    int position;
+
+    public MasterOnClickListener(int position) {
+      this.position = position;
+    }
+
+    @Override
+    public void onClick(View v) {
+      ((OnTextClickListener) mContext).onTextSelected(position);
+    }
   }
 }

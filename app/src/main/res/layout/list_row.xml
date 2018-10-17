@@ -11,7 +11,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:singleLine="true"
-    android:text="Heading"
+    android:text="@string/heading"
     android:textSize="14sp"/>
 
   <TextView
@@ -20,7 +20,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="5dip"
     android:layout_below="@id/heading"
-    android:text="Content"
+    android:text="@string/content"
     android:textSize="14sp"/>
 
 </RelativeLayout>

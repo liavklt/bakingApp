@@ -46,7 +46,7 @@
 
     <provider
       android:authorities="com.example.android.bakingapp"
-      android:exported="true"
+      android:exported="false"
       android:name=".data.IngredientsContentProvider"/>
   </application>
 

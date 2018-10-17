@@ -18,24 +18,12 @@ public class Ingredient {
     return quantity + " " + measure + " of " + ingredientDescription;
   }
 
-  public double getQuantity() {
-    return quantity;
-  }
-
   public void setQuantity(double quantity) {
     this.quantity = quantity;
   }
 
-  public String getMeasure() {
-    return measure;
-  }
-
   public void setMeasure(String measure) {
     this.measure = measure;
-  }
-
-  public String getIngredientDescription() {
-    return ingredientDescription;
   }
 
   public void setIngredientDescription(String ingredientDescription) {

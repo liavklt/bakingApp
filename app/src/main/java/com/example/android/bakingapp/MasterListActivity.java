@@ -28,11 +28,11 @@ public class MasterListActivity extends AppCompatActivity implements
   private static final int TASK_LOADER_ID = 0;
 
   @BindView(R.id.steps_recycler_view)
-  RecyclerView recyclerView;
+  private RecyclerView recyclerView;
   @BindView(R.id.rv_ingredients)
-  RecyclerView ingredientsRecyclerView;
+  private RecyclerView ingredientsRecyclerView;
 
-  LinearLayoutManager linearLayoutManager;
+  private LinearLayoutManager linearLayoutManager;
   private CustomCursorAdapter adapter;
   private boolean mTwoPane;
   private int stepPosition;
@@ -80,6 +80,8 @@ public class MasterListActivity extends AppCompatActivity implements
 
         viewRecipeFragment.setDescription(
             step.getDescription());
+        viewRecipeFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+        viewRecipeFragment.setOnTablet(true);
         VideoFragment videoFragment = new VideoFragment();
         videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
         videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
@@ -109,6 +111,8 @@ public class MasterListActivity extends AppCompatActivity implements
       step = recipe.getSteps().get(position);
       ViewRecipeFragment viewRecipeFragment = new ViewRecipeFragment();
       viewRecipeFragment.setDescription(step.getDescription());
+      viewRecipeFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+      viewRecipeFragment.setOnTablet(true);
 
       VideoFragment videoFragment = new VideoFragment();
       videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");

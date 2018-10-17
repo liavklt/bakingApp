@@ -6,9 +6,7 @@ import java.net.URL;
  * Created by lianavklt on 06/07/2018.
  */
 
-public interface AsyncTaskListener<T> {
-
-  void onTaskPreExecute();
+interface AsyncTaskListener<T> {
 
   T onTaskGetResult(int position);
 
