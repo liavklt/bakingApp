@@ -19,12 +19,12 @@ import com.example.android.bakingapp.model.Step;
 
 public class ViewRecipeActivity extends AppCompatActivity implements OnClickListener {
 
+  @BindView(R.id.previousButton)
+  Button previousButton;
+  @BindView(R.id.nextButton)
+  Button nextButton;
   private Recipe recipe;
   private int stepPosition;
-  @BindView(R.id.previousButton)
-  private Button previousButton;
-  @BindView(R.id.nextButton)
-  private Button nextButton;
   private Step step;
 
   @Override

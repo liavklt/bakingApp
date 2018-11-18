@@ -28,9 +28,9 @@ public class MasterListActivity extends AppCompatActivity implements
   private static final int TASK_LOADER_ID = 0;
 
   @BindView(R.id.steps_recycler_view)
-  private RecyclerView recyclerView;
+  RecyclerView recyclerView;
   @BindView(R.id.rv_ingredients)
-  private RecyclerView ingredientsRecyclerView;
+  RecyclerView ingredientsRecyclerView;
 
   private LinearLayoutManager linearLayoutManager;
   private CustomCursorAdapter adapter;

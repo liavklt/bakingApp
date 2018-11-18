@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
   private static final String URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
   @BindView(R.id.lv_recipes)
-  private ListView listView;
+  ListView listView;
   private RecipeListAdapter adapter;
   private IngredientWidgetProvider ingredientWidgetProvider;
   private List<Recipe> recipes;

@@ -20,12 +20,6 @@ class FetchRecipesAsyncTask extends AsyncTask<URL, Void, List<Recipe>> {
   }
 
   @Override
-  protected void onPreExecute() {
-    super.onPreExecute();
-    asyncTaskListener.onTaskPreExecute();
-  }
-
-  @Override
   protected List<Recipe> doInBackground(URL... urls) {
     URL recipeRequestURL = urls[0];
     return asyncTaskListener.onTaskGetResult(recipeRequestURL);
