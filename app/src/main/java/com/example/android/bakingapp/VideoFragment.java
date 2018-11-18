@@ -163,7 +163,7 @@ public class VideoFragment extends Fragment {
       BandwidthMeter bandwidthMeter) {
 
     Uri videoUri = Uri.parse(uri);
-    mExoPlayer.seekTo(playerPosition); //TODO check in landscape mode, it does not keep position
+    mExoPlayer.seekTo(playerPosition);
     mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
 
     // Prepare the MediaSource.
