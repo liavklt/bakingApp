@@ -10,14 +10,6 @@ import android.widget.RemoteViewsService;
 
 public class IngredientWidgetService extends RemoteViewsService {
 
-//  public static void updateWidget(Context context, Recipe recipe) {
-//    RecipePreferencesHelper.saveRecipe(context, recipe);
-//
-//    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-//    int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, IngredientWidgetProvider.class));
-//    IngredientWidgetProvider.updateAppWidgets(context, appWidgetManager, appWidgetIds);
-//  }
-
   @Override
   public RemoteViewsFactory onGetViewFactory(Intent intent) {
     int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
