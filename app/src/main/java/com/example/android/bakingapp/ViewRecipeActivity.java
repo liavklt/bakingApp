@@ -23,9 +23,9 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
   Button previousButton;
   @BindView(R.id.nextButton)
   Button nextButton;
-  private Recipe recipe;
-  private int stepPosition;
-  private Step step;
+  Recipe recipe;
+  int stepPosition;
+  Step step;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -38,8 +38,10 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     nextButton.setOnClickListener(this);
     Intent intent = getIntent();
     recipe = intent.getParcelableExtra("recipeIntent");
-    stepPosition = intent.getIntExtra("position", 0);
-
+    stepPosition = intent.getIntExtra("position", stepPosition);
+    if (savedInstanceState != null) {
+      stepPosition = savedInstanceState.getInt("stepPosition");
+    }
     setButtonsVisibility();
 
     if (savedInstanceState == null) {
@@ -47,22 +49,11 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
       step = getIntent().getParcelableExtra("step");
       android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
 
-//      int orientation = this.getResources().getConfiguration().orientation;
-//      if(orientation == Configuration.ORIENTATION_LANDSCAPE){
-//        FrameLayout stepInstructionsLayout = findViewById(R.id.step_instructions_container);
-//        stepInstructionsLayout.setVisibility(View.GONE);
-//        FrameLayout videoLayout = findViewById(R.id.video_container);
-//        LayoutParams layoutParams = videoLayout.getLayoutParams();
-//        layoutParams.width = LayoutParams.MATCH_PARENT;
-//        layoutParams.height = LayoutParams.MATCH_PARENT;
-//        videoLayout.setLayoutParams(layoutParams);
-//      }else{
       ViewRecipeFragment stepFragment = new ViewRecipeFragment();
       stepFragment.setDescription(step != null ? step.getDescription() : "");
       stepFragment.setVideoUrl(step.getVideoUrl());
       fragmentManager.beginTransaction().add(R.id.step_instructions_container, stepFragment)
           .commit();
-//      }
 
       if (step.getVideoUrl() != null && !step.getVideoUrl().equals("")) {
         VideoFragment videoFragment = new VideoFragment();
@@ -76,21 +67,11 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     }
   }
 
-//  @Override
-//  protected void onResume() {
-//    super.onResume();
-//    int orientation = this.getResources().getConfiguration().orientation;
-//    if(orientation == Configuration.ORIENTATION_LANDSCAPE && !step.getVideoUrl().equals("")){
-//      FrameLayout stepInstructionsLayout = findViewById(R.id.step_instructions_container);
-//      stepInstructionsLayout.setVisibility(View.GONE);
-//      FrameLayout videoLayout = findViewById(R.id.video_container);
-//      LayoutParams layoutParams = videoLayout.getLayoutParams();
-//      layoutParams.width = LayoutParams.MATCH_PARENT;
-//      layoutParams.height = LayoutParams.MATCH_PARENT;
-//      videoLayout.setLayoutParams(layoutParams);
-//    }
-//  }
-
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putInt("stepPosition", stepPosition);
+  }
 
   private void setButtonsVisibility() {
     if (stepPosition == 0) {
@@ -138,8 +119,8 @@ public class ViewRecipeActivity extends AppCompatActivity implements OnClickList
     viewRecipeFragment.setVideoUrl(step.getVideoUrl());
 
     VideoFragment videoFragment = new VideoFragment();
-    videoFragment.setVideoUrl(step.getVideoUrl());
-    videoFragment.setThumbnailUrl(step.getThumbnailUrl());
+    videoFragment.setVideoUrl(step != null ? step.getVideoUrl() : "");
+    videoFragment.setThumbnailUrl(step != null ? step.getThumbnailUrl() : "");
     videoFragment.setStepTextView((FrameLayout) findViewById(R.id.step_instructions_container));
     getSupportFragmentManager().beginTransaction().replace(R.id.video_container, videoFragment)
         .commit();

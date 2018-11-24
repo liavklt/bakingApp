@@ -20,12 +20,12 @@ import android.support.annotation.Nullable;
 
 public class IngredientsContentProvider extends ContentProvider {
 
-  private static final int INGREDIENTS = 100;
-  private static final int INGREDIENT_WITH_ID = 101;
+  public static final int INGREDIENTS = 100;
+  public static final int INGREDIENT_WITH_ID = 101;
   private static final UriMatcher uriMatcher = buildUriMatcher();
   private IngredientsDbHelper ingredientsDbHelper;
 
-  static UriMatcher buildUriMatcher() {
+  public static UriMatcher buildUriMatcher() {
     UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     uriMatcher
         .addURI(IngredientsContract.AUTHORITY, IngredientsContract.PATH_INGREDIENTS, INGREDIENTS);

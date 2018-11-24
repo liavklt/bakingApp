@@ -38,13 +38,14 @@ public class IngredientWidgetProvider extends AppWidgetProvider {
 
   @Override
   public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
+    final int N = appWidgetIds.length;
 
-    for (int appWidgetId : appWidgetIds) {
+    for (int i = 0; i < N; ++i) {
       RemoteViews remoteViews = updateWidgetListView(context,
-          appWidgetId);
-      appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.widget_list_view);
+          appWidgetIds[i]);
+      appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds[i], R.id.widget_list_view);
 
-      appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+      appWidgetManager.updateAppWidget(appWidgetIds[i], remoteViews);
     }
     super.onUpdate(context, appWidgetManager, appWidgetIds);
 

@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -34,11 +35,12 @@ import utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-  private static final String URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+  public static final String URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+  private static final String LOG_TAG = MainActivity.class.getSimpleName();
   @BindView(R.id.lv_recipes)
   ListView listView;
-  private RecipeListAdapter adapter;
-  private IngredientWidgetProvider ingredientWidgetProvider;
+  RecipeListAdapter adapter;
+  IngredientWidgetProvider ingredientWidgetProvider;
   private List<Recipe> recipes;
 
   @Override
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     if (NetworkUtils.isConnected(this)) {
       recipeUrl = NetworkUtils.buildUrl(URL);
       adapter = new RecipeListAdapter(this);
-      new FetchRecipesAsyncTask(new FetchRecipesTaskListener()).execute(recipeUrl);
+      new FetchRecipesAsyncTask(this, new FetchRecipesTaskListener()).execute(recipeUrl);
       listView.setAdapter(adapter);
       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         @Override
@@ -83,6 +85,14 @@ public class MainActivity extends AppCompatActivity {
     contentValues.put(IngredientsEntry.COLUMN_RECIPE_ID, recipe.getId());
     contentValues
         .put(IngredientsEntry.COLUMN_INGREDIENT, TextUtils.join(",", ingredientDescriptions));
+    Uri uri = getContentResolver().insert(IngredientsEntry.CONTENT_URI, contentValues);
+//    if (uri != null) {
+//      Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_LONG).show();
+//    } else {
+//      Toast.makeText(getBaseContext(), "Already exists!", Toast.LENGTH_SHORT).show();
+//    }
+
+
   }
 
   @Override
@@ -100,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     sharedPreferences.edit().putInt("recipeKey", recipes.get(i).getId()).apply();
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     RemoteViews remoteViews = new RemoteViews(this.getPackageName(), R.layout.list_row);
+    ComponentName thisWidget = new ComponentName(this, IngredientWidgetProvider.class);
     remoteViews.setTextViewText(R.id.heading, recipes.get(i).getName());
     remoteViews.setTextViewText(R.id.content,
         recipes.get(i).getIngredients().toString().replaceAll(",", "\n"));
@@ -113,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
 
 
   public class FetchRecipesTaskListener implements AsyncTaskListener<List<Recipe>> {
+
+    @Override
+    public void onTaskPreExecute() {
+
+    }
 
     @Override
     public List<Recipe> onTaskGetResult(int position) {

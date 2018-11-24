@@ -20,14 +20,21 @@ import java.util.List;
  * Created by lianavklt on 10/07/2018.
  */
 
-class ListProvider implements RemoteViewsFactory {
+public class ListProvider implements RemoteViewsFactory {
 
   private Context context = null;
+  private int appWidgetId;
   private List<ListItem> listItemList = new ArrayList<>();
 
-
-  ListProvider(Context context, Intent intent) {
+  public ListProvider(Context context) {
     this.context = context;
+    populateListItem();
+
+  }
+
+  public ListProvider(Context context, Intent intent, int appWidgetId) {
+    this.context = context;
+    this.appWidgetId = appWidgetId;
     populateListItem();
   }
 

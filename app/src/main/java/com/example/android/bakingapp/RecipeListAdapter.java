@@ -15,18 +15,18 @@ import java.util.List;
  * Created by lianavklt on 23/06/2018.
  */
 
-class RecipeListAdapter extends BaseAdapter {
+public class RecipeListAdapter extends BaseAdapter {
 
   private Context mContext;
   private List<Recipe> mRecipes;
 
 
-  RecipeListAdapter(Context context) {
+  public RecipeListAdapter(Context context) {
     mContext = context;
   }
 
 
-  void setRecipeData(List<Recipe> recipeData) {
+  public void setRecipeData(List<Recipe> recipeData) {
     this.mRecipes = recipeData;
   }
 

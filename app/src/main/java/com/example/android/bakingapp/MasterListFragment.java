@@ -24,17 +24,19 @@ public class MasterListFragment extends Fragment {
 
 
   private RecyclerView recyclerView;
+  private LinearLayoutManager linearLayoutManager;
   private MasterListAdapter mAdapter;
   private Recipe mRecipe;
+  private MasterListActivity activity;
   private Context mContext;
 
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-//    if (context instanceof MasterListActivity) {
-//      MasterListActivity activity = (MasterListActivity) context;
-//    }
+    if (context instanceof MasterListActivity) {
+      MasterListActivity activity = (MasterListActivity) context;
+    }
     mContext = context;
 
   }
@@ -43,13 +45,13 @@ public class MasterListFragment extends Fragment {
     this.mRecipe = recipe;
     recyclerView = rv;
     recyclerView.setHasFixedSize(true);
-    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),
+    linearLayoutManager = new LinearLayoutManager(getActivity(),
         LinearLayoutManager.VERTICAL,
         false);
     recyclerView.setLayoutManager(linearLayoutManager);
     mAdapter = new MasterListAdapter(mContext);
     recyclerView.setAdapter(mAdapter);
-    new FetchStepsAsyncTask(new FetchStepsTaskListener()).execute(mRecipe.getId());
+    new FetchStepsAsyncTask(getContext(), new FetchStepsTaskListener()).execute(mRecipe.getId());
   }
 
   @Override
@@ -67,6 +69,11 @@ public class MasterListFragment extends Fragment {
 
   public class FetchStepsTaskListener implements AsyncTaskListener<List<Step>> {
 
+
+    @Override
+    public void onTaskPreExecute() {
+
+    }
 
     @Override
     public List<Step> onTaskGetResult(int position) {

@@ -161,7 +161,7 @@ public class VideoFragment extends Fragment {
 
   private void initializePlayer(String uri,
       BandwidthMeter bandwidthMeter) {
-
+//    if (!uri.equals("")) {
     Uri videoUri = Uri.parse(uri);
     mExoPlayer.seekTo(playerPosition);
     mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
@@ -176,7 +176,7 @@ public class VideoFragment extends Fragment {
     final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
 
     mExoPlayer.prepare(loopingSource);
-
+//    }
 
   }
 

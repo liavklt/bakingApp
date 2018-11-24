@@ -2,6 +2,11 @@ package com.example.android.bakingapp.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Base64;
+import android.util.Log;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +16,7 @@ import java.util.List;
 
 public class Recipe implements Parcelable {
 
+  public static final String TAG = Recipe.class.getSimpleName();
   public static final Parcelable.Creator<Recipe> CREATOR =
       new Parcelable.Creator<Recipe>() {
         @Override
@@ -37,6 +43,28 @@ public class Recipe implements Parcelable {
     steps = new ArrayList<>();
     source.readTypedList(steps,Step.CREATOR);
 
+  }
+
+  public static String toBase64String(Recipe recipe) {
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      return Base64.encodeToString(mapper.writeValueAsBytes(recipe), 0);
+    } catch (JsonProcessingException e) {
+      Log.e(TAG, e.getMessage());
+    }
+    return null;
+  }
+
+  public static Recipe fromBase64(String base64String) {
+    if (!("".equals(base64String))) {
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        return mapper.readValue(Base64.decode(base64String, 0), Recipe.class);
+      } catch (IOException e) {
+        Log.e(TAG, e.getMessage());
+      }
+    }
+    return null;
   }
 
   public List<Ingredient> getIngredients() {
@@ -70,7 +98,6 @@ public class Recipe implements Parcelable {
   public void setId(int id) {
     this.id = id;
   }
-
 
   @Override
   public int describeContents() {
