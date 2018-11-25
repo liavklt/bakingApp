@@ -9,7 +9,7 @@ import android.os.Parcelable;
 
 public class Step implements Parcelable {
 
-  static final Parcelable.Creator<Step> CREATOR =
+  public static final Parcelable.Creator<Step> CREATOR =
       new Parcelable.Creator<Step>() {
         @Override
         public Step createFromParcel(Parcel source) {
