@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -41,13 +43,20 @@ public class VideoFragment extends Fragment {
   private static final String TAG = VideoFragment.class.getName();
   private static final String PLAYER_POSITION = "player_position";
   private static final String STATE = "state";
-  private PlayerView mPlayerView;
+  private static final String VIDEO_URL = "video_url";
+  @BindView(R.id.playerView)
+  PlayerView mPlayerView;
   private String videoUrl;
   private String thumbnailUrl;
   private SimpleExoPlayer mExoPlayer;
   private FrameLayout stepTextViewId;
   private long playerPosition;
   private boolean getPlayerWhenReady;
+  private MediaSource mediaSource;
+  private TrackSelector trackSelector;
+  private DataSource.Factory dataSourceFactory;
+  private BandwidthMeter bandwidthMeter;
+  private LoopingMediaSource loopingSource;
 
 
   public VideoFragment() {
@@ -61,51 +70,45 @@ public class VideoFragment extends Fragment {
     this.thumbnailUrl = thumbnailUrl;
   }
 
-  @Override
-  public void onStart() {
-    super.onStart();
-    if (Util.SDK_INT > 23) {
-      initializePlayerView();
-    }
-  }
 
   @Override
   public void onResume() {
     super.onResume();
-    if ((Util.SDK_INT <= 23 || mExoPlayer == null)) {
-      initializePlayerView();
-    }
+
+    initializePlayer();
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    releasePlayer();
   }
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (savedInstanceState != null) {
-      playerPosition = savedInstanceState.getLong(PLAYER_POSITION);
-      getPlayerWhenReady = savedInstanceState.getBoolean(STATE);
-    }
-    BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-    TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(
-        bandwidthMeter);
-    TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
-    mExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), trackSelector);
-    initializePlayer(videoUrl, bandwidthMeter);
-
-    setRetainInstance(true);
   }
 
+  private DataSource.Factory buildDataSourceFactory() {
+    String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
+    return new DefaultDataSourceFactory(getActivity(), userAgent,
+        (TransferListener<? super DataSource>) bandwidthMeter);
+  }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
     View rootView = inflater.inflate(R.layout.fragment_video, container, false);
-
-    mPlayerView = rootView.findViewById(R.id.playerView);
+    if (savedInstanceState != null) {
+      playerPosition = savedInstanceState.getLong(PLAYER_POSITION);
+      getPlayerWhenReady = savedInstanceState.getBoolean(STATE);
+      videoUrl = savedInstanceState.getString(VIDEO_URL);
+    }
+    ButterKnife.bind(this, rootView);
     LinearLayout.LayoutParams layoutParams = (LayoutParams) mPlayerView.getLayoutParams();
     changeConfigurationAccordingToOrientation(getResources().getConfiguration(), layoutParams);
 
-    initializePlayerView();
     return rootView;
   }
 
@@ -123,18 +126,15 @@ public class VideoFragment extends Fragment {
     }
     mPlayerView.requestFocus();
 
-    mPlayerView.setPlayer(mExoPlayer);
-
     mPlayerView.setVisibility(View.VISIBLE);
   }
 
   @Override
   public void onSaveInstanceState(@NonNull Bundle outState) {
     super.onSaveInstanceState(outState);
-    playerPosition = mExoPlayer != null ? mExoPlayer.getCurrentPosition() : 0;
     outState.putLong(PLAYER_POSITION, playerPosition);
-    getPlayerWhenReady = mExoPlayer != null && mExoPlayer.getPlayWhenReady();
     outState.putBoolean(STATE, getPlayerWhenReady);
+    outState.putString(VIDEO_URL, videoUrl);
 
   }
 
@@ -159,38 +159,45 @@ public class VideoFragment extends Fragment {
     }
   }
 
-  private void initializePlayer(String uri,
-      BandwidthMeter bandwidthMeter) {
-//    if (!uri.equals("")) {
-    Uri videoUri = Uri.parse(uri);
-    mExoPlayer.seekTo(playerPosition);
-    mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
+  private void initializePlayer() {
+//    if (!uri.equals("")) {\
+    Uri videoUri = Uri.parse(videoUrl);
 
-    // Prepare the MediaSource.
-    String userAgent = Util.getUserAgent(getActivity(), "BakingApp");
-    DataSource.Factory factory = new DefaultDataSourceFactory(getActivity(), userAgent,
-        (TransferListener<? super DataSource>) bandwidthMeter);
+    if (mExoPlayer == null) {
+      bandwidthMeter = new DefaultBandwidthMeter();
 
-    MediaSource mediaSource = new ExtractorMediaSource.Factory(factory)
-        .createMediaSource(videoUri);
-    final LoopingMediaSource loopingSource = new LoopingMediaSource(mediaSource);
+      TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(
+          bandwidthMeter);
+      trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
 
-    mExoPlayer.prepare(loopingSource);
+      mExoPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+      mPlayerView.setPlayer(mExoPlayer);
+      dataSourceFactory = buildDataSourceFactory();
+      mediaSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+          .createMediaSource(videoUri);
+      loopingSource = new LoopingMediaSource(mediaSource);
+      mExoPlayer.prepare(loopingSource);
+
+      if (playerPosition != 0) {
+        mExoPlayer.seekTo(playerPosition);
+      }
+      mExoPlayer.setPlayWhenReady(getPlayerWhenReady);
+
+      initializePlayerView();
+    }
+
 //    }
 
   }
 
-  @Override
-  public void onDestroy() {
-    super.onDestroy();
-    releasePlayer();
-  }
-
   private void releasePlayer() {
     if (mExoPlayer != null) {
+      getPlayerWhenReady = mExoPlayer.getPlayWhenReady();
+      playerPosition = mExoPlayer.getCurrentPosition();
       mExoPlayer.stop();
       mExoPlayer.release();
       mExoPlayer = null;
+
     }
   }
 
